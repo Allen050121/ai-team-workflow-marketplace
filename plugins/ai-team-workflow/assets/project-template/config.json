@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "branchPrefix": "codex/",
+  "defaultMaxParallelAgents": 3,
+  "absoluteMaxParallelAgents": 4,
+  "memoryFiles": [
+    ".ai-team/memory/human-lead.md",
+    ".ai-team/memory/project-brief.md",
+    ".ai-team/memory/technology-policy.md",
+    ".ai-team/memory/pitfalls.md",
+    ".ai-team/memory/patterns.md"
+  ],
+  "requiredGates": [
+    ".ai-team/checklists/plan-gate.md",
+    ".ai-team/checklists/scale-gate.md",
+    ".ai-team/checklists/review-gate.md",
+    ".ai-team/checklists/quality-gate.md",
+    ".ai-team/checklists/performance-gate.md",
+    ".ai-team/checklists/integration-gate.md"
+  ],
+  "taskTemplate": ".ai-team/tasks/TEMPLATE.md",
+  "defaultWorktreeRootName": ".ai-team-worktrees",
+  "rolePrompts": {
+    "dispatcher": ".ai-team/prompts/dispatcher.md",
+    "executor": ".ai-team/prompts/executor.md",
+    "reviewer": ".ai-team/prompts/reviewer-verifier.md",
+    "memory": ".ai-team/prompts/memory-curator.md"
+  },
+  "hookBundles": {
+    "dispatcher": [
+      ".ai-team/prompts/dispatcher.md",
+      ".ai-team/checklists/plan-gate.md"
+    ],
+    "executor": [
+      ".ai-team/prompts/executor.md"
+    ],
+    "reviewer": [
+      ".ai-team/prompts/reviewer-verifier.md",
+      ".ai-team/checklists/review-gate.md"
+    ],
+    "memory": [
+      ".ai-team/prompts/memory-curator.md"
+    ],
+    "integration": [
+      ".ai-team/checklists/integration-gate.md"
+    ]
+  }
+}
