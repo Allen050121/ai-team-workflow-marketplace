@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "commands": {
+    "install": null,
+    "dev": null,
+    "lint": null,
+    "typecheck": null,
+    "test": null,
+    "build": null,
+    "smoke": null,
+    "security": null,
+    "performance": null
+  },
+  "notes": [
+    "Codex should inspect the project and fill these commands during project initialization.",
+    "Reviewer/Verifier should prefer these commands over guessing.",
+    "Use null when a command is not available and document the waiver in the task card."
+  ]
+}

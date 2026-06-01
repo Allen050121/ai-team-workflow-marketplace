@@ -17,5 +17,7 @@ Use after an Executor finishes and before integration.
 - [ ] Existing project patterns are followed unless the task explains why not.
 - [ ] Security-sensitive paths were reviewed carefully.
 - [ ] Verification command was run or a waiver is documented.
+- [ ] Commands were selected from `.ai-team/commands.json` when available.
+- [ ] PR Gate passed when GitHub is used.
 - [ ] Handoff notes list changed files, verification result, risks, and follow-ups.
 - [ ] Reviewer result is pass, request changes, or blocked.

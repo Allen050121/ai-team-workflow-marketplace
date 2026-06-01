@@ -14,6 +14,8 @@ Use before merging task branches into the main integration branch.
 - [ ] Task branches were merged in the planned dependency order.
 - [ ] Combined changed file list has no unexpected collisions.
 - [ ] Build, test, lint, typecheck, or documented project checks passed.
+- [ ] GitHub CI is passing when GitHub is used, or waiver is documented.
+- [ ] Security Gate passed for auth, user data, secrets, dependencies, deployment, or external services.
 - [ ] Manual smoke test was run when user-facing behavior changed.
 - [ ] Final diff contains no unrelated edits.
 - [ ] New durable pitfalls were added to `pitfalls.md`.

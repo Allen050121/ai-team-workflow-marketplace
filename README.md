@@ -4,7 +4,7 @@ Local/Git marketplace for the `ai-team-workflow` Codex plugin.
 
 ## Plugin
 
-- `ai-team-workflow`: Codex-first AI development team workflow with a global Human Lead profile, project-local `.ai-team` task system, natural-language routing, and scale-aware quality gates.
+- `ai-team-workflow`: Codex-first AI development team workflow with a global Human Lead profile, project-local `.ai-team` task system, natural-language routing, scale-aware quality gates, and lightweight GitHub PR/CI/security gates.
 
 ## Install On Another Computer
 

@@ -35,3 +35,10 @@ Keep the stack proportional to product scale. Prefer boring, maintainable choice
 - Existing framework patterns over custom architecture.
 - Explicit error, loading, and empty states for user-facing flows.
 - Verification command or documented waiver on every task.
+
+## GitHub Defaults
+
+- Use one task branch per implementation task when GitHub is enabled.
+- Prefer PR + CI as the production merge gate.
+- Do not merge code tasks without recorded verification and review result.
+- GitHub Issues/Projects are optional until collaboration or tracking complexity requires them.

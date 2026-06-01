@@ -9,6 +9,7 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Natural-language routing rules for Codex.
 - Task cards, memory files, prompts, and quality gates.
 - Scale, quality, and performance gates to avoid both messy code and overengineering.
+- Lightweight GitHub PR, CI, and security gates integrated with task cards.
 
 ## Install Global Template
 

@@ -112,3 +112,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/hooks/ai-team-hook.
 - `.ai-team/checklists/`: plan, review, and integration gates.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.
+- `.ai-team/commands.json`: project verification commands used by Reviewer/Verifier.
+- `.ai-team/github/`: lightweight issue and PR templates for GitHub-backed projects.

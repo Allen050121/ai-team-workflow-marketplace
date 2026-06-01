@@ -5,6 +5,10 @@ status: "{{STATUS}}"
 owner: "{{OWNER}}"
 mode: "{{MODE}}"
 created: "{{DATE}}"
+branch:
+github_issue:
+github_pr:
+ci_status:
 tags:
   - ai-team/task
 ---
@@ -17,6 +21,10 @@ tags:
 - Owner: `{{OWNER}}`
 - Status: `{{STATUS}}`
 - Mode: `{{MODE}}`
+- Branch:
+- GitHub Issue:
+- GitHub PR:
+- CI Status:
 
 ## Goal
 
@@ -40,8 +48,10 @@ List what this task must not change.
 ## Context To Read
 
 - `.ai-team/memory/project-brief.md`
+- `.ai-team/memory/technology-policy.md`
 - `.ai-team/memory/pitfalls.md`
 - `.ai-team/memory/patterns.md`
+- `.ai-team/commands.json`
 - Related source files listed above.
 
 ## Implementation Notes
@@ -49,6 +59,8 @@ List what this task must not change.
 - Keep the change small enough for one reviewer to inspect quickly.
 - Prefer existing project patterns over new abstractions.
 - If boundaries are wrong, stop and update this card before editing.
+- Create or use a task branch when code changes are required.
+- Keep GitHub issue/PR fields updated when GitHub is used for the project.
 
 ## Acceptance Criteria
 
@@ -57,6 +69,8 @@ List what this task must not change.
 - [ ] Diff has no unrelated edits.
 - [ ] Pitfalls were checked.
 - [ ] Verification command was run or explicitly waived with a reason.
+- [ ] Security-sensitive changes passed `.ai-team/checklists/security-gate.md`.
+- [ ] PR/CI status is recorded when GitHub is used.
 
 ## Verification
 

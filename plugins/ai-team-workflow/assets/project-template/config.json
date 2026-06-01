@@ -15,7 +15,9 @@
     ".ai-team/checklists/scale-gate.md",
     ".ai-team/checklists/review-gate.md",
     ".ai-team/checklists/quality-gate.md",
+    ".ai-team/checklists/security-gate.md",
     ".ai-team/checklists/performance-gate.md",
+    ".ai-team/checklists/pr-gate.md",
     ".ai-team/checklists/integration-gate.md"
   ],
   "taskTemplate": ".ai-team/tasks/TEMPLATE.md",
@@ -36,7 +38,10 @@
     ],
     "reviewer": [
       ".ai-team/prompts/reviewer-verifier.md",
-      ".ai-team/checklists/review-gate.md"
+      ".ai-team/checklists/review-gate.md",
+      ".ai-team/checklists/quality-gate.md",
+      ".ai-team/checklists/security-gate.md",
+      ".ai-team/checklists/pr-gate.md"
     ],
     "memory": [
       ".ai-team/prompts/memory-curator.md"
