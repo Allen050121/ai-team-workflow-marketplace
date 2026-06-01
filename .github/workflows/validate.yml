@@ -121,7 +121,11 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Sync-AiTeamState.ps1")
-          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 | Out-Null
+          $compactContext = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001
+          $compactText = $compactContext -join "`n"
+          if ($compactText -notmatch "Recent Run Evidence") { throw "Compact context did not include run evidence heading." }
+          if ($compactText -notmatch "demo-001-executor") { throw "Compact context did not include latest task run summary." }
+          if ($compactText -match '"runs"') { throw "Compact context should summarize run evidence instead of dumping runs.json." }
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
           $safeCommand = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamCommand.ps1") -Command "git status --short" -Json | ConvertFrom-Json
