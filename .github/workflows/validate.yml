@@ -124,25 +124,29 @@ jobs:
           if ($demo1Card -notmatch "- docs/notes\.md") { throw "demo-001 allowed files did not render docs/notes.md correctly." }
           if ($demo2Card -notmatch "- src/\*\*") { throw "demo-002 allowed files did not render correctly." }
           if ($demo1Card.Contains('- $_') -or $demo2Card.Contains('- $_')) { throw 'Allowed files rendered as literal $_.' }
-          Set-Content -LiteralPath (Join-Path $project ".ai-team/tasks/bad-boundary.md") -Encoding UTF8 -Value @'
----
-task_id: bad-boundary
-status: planned
-work_mode: MVP
----
-
-# Bad Boundary
-
-### Allowed To Modify
-
-- $_
-'@
-          $badBoundaryPassed = $true
-          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamProject.ps1") -SkipSync | Out-Null
-          if ($LASTEXITCODE -ne 0) {
-            $badBoundaryPassed = $false
-          }
-          if ($badBoundaryPassed) { throw "Project health check did not reject literal allowed-file boundary." }
+          $badBoundaryCard = @(
+            "---",
+            "task_id: bad-boundary",
+            "status: planned",
+            "work_mode: MVP",
+            "---",
+            "",
+            "# Bad Boundary",
+            "",
+            "### Allowed To Modify",
+            "",
+            '- $_'
+          ) -join [Environment]::NewLine
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/tasks/bad-boundary.md") -Encoding UTF8 -Value $badBoundaryCard
+          $badBoundaryCheck = Start-Process -FilePath "powershell" -ArgumentList @(
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            (Join-Path $project ".ai-team/scripts/Test-AiTeamProject.ps1"),
+            "-SkipSync"
+          ) -Wait -PassThru -NoNewWindow
+          if ($badBoundaryCheck.ExitCode -eq 0) { throw "Project health check did not reject literal allowed-file boundary." }
           Remove-Item -LiteralPath (Join-Path $project ".ai-team/tasks/bad-boundary.md")
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
