@@ -52,6 +52,109 @@ function Get-LatestRunForTask {
         Select-Object -First 1
 }
 
+function Get-TaskById {
+    param(
+        [array]$Tasks,
+        [string]$TaskId
+    )
+
+    if (-not $Tasks -or -not $TaskId) { return $null }
+    return $Tasks | Where-Object { $_.task_id -eq $TaskId } | Select-Object -First 1
+}
+
+function Test-DependenciesDone {
+    param(
+        [array]$Tasks,
+        [object]$Task
+    )
+
+    $dependencies = @($Task.dependencies | Where-Object { $_ })
+    if ($dependencies.Count -eq 0) { return $true }
+
+    foreach ($dependencyId in $dependencies) {
+        $dependency = Get-TaskById $Tasks $dependencyId
+        if (-not $dependency) { return $false }
+        if ("$($dependency.status)".ToLowerInvariant() -ne "done") { return $false }
+    }
+    return $true
+}
+
+function Get-BlockedDependencies {
+    param(
+        [array]$Tasks,
+        [object]$Task
+    )
+
+    $blocked = @()
+    foreach ($dependencyId in @($Task.dependencies | Where-Object { $_ })) {
+        $dependency = Get-TaskById $Tasks $dependencyId
+        if (-not $dependency) {
+            $blocked += "$dependencyId (missing)"
+        }
+        elseif ("$($dependency.status)".ToLowerInvariant() -ne "done") {
+            $blocked += "$dependencyId [$($dependency.status)]"
+        }
+    }
+    return $blocked
+}
+
+function Get-RecommendedAction {
+    param(
+        [array]$Tasks
+    )
+
+    if (-not $Tasks -or $Tasks.Count -eq 0) { return $null }
+
+    foreach ($task in $Tasks) {
+        $status = "$($task.status)".ToLowerInvariant()
+        $lastResult = "$($task.last_result)".ToLowerInvariant()
+        $verification = "$($task.verification_status)".ToLowerInvariant()
+        if ($status -eq "blocked" -or $lastResult -in @("failed", "blocked") -or $verification -eq "failed") {
+            return [ordered]@{
+                task_id = $task.task_id
+                action = "fix"
+                reason = "Task has blocked or failed evidence."
+            }
+        }
+    }
+
+    foreach ($task in $Tasks) {
+        $status = "$($task.status)".ToLowerInvariant()
+        if ($status -eq "review" -and (Test-DependenciesDone $Tasks $task)) {
+            return [ordered]@{
+                task_id = $task.task_id
+                action = "review"
+                reason = "Task is waiting for Reviewer/Verifier."
+            }
+        }
+    }
+
+    foreach ($task in $Tasks) {
+        $status = "$($task.status)".ToLowerInvariant()
+        if ($status -in @("planned", "in_progress", "unknown") -and (Test-DependenciesDone $Tasks $task)) {
+            return [ordered]@{
+                task_id = $task.task_id
+                action = "execute"
+                reason = "Dependencies are done and task is not complete."
+            }
+        }
+    }
+
+    foreach ($task in $Tasks) {
+        $status = "$($task.status)".ToLowerInvariant()
+        if ($status -ne "done") {
+            $blocked = Get-BlockedDependencies $Tasks $task
+            return [ordered]@{
+                task_id = $task.task_id
+                action = "wait"
+                reason = if ($blocked.Count -gt 0) { "Waiting on dependencies: $($blocked -join ', ')." } else { "Task is not done but no safe next action was inferred." }
+            }
+        }
+    }
+
+    return $null
+}
+
 $taskFiles = Get-ChildItem -LiteralPath $tasksDir -Filter "*.md" |
     Where-Object { $_.Name -ne "TEMPLATE.md" } |
     Sort-Object Name
@@ -116,15 +219,9 @@ else {
 Write-Host ""
 Write-Host "Suggested next action:"
 
-$next = $null
+$recommendation = $null
 if ($stateTasks.Count -gt 0) {
-    foreach ($task in $stateTasks) {
-        $status = "$($task.status)".ToLowerInvariant()
-        if ($status -ne "done") {
-            $next = $task.task_id
-            break
-        }
-    }
+    $recommendation = Get-RecommendedAction $stateTasks
 }
 else {
 foreach ($file in $taskFiles) {
@@ -138,14 +235,19 @@ foreach ($file in $taskFiles) {
     }
 
     if ($status -ne "done") {
-        $next = $file.BaseName
+        $recommendation = [ordered]@{
+            task_id = $file.BaseName
+            action = "inspect"
+            reason = "Task state has not been synced yet."
+        }
         break
     }
 }
 }
 
-if ($next) {
-    Write-Host "Continue with task: $next"
+if ($recommendation) {
+    Write-Host ("{0}: {1}" -f $recommendation.action, $recommendation.task_id)
+    Write-Host ("Reason: {0}" -f $recommendation.reason)
 }
 else {
     Write-Host "All known task cards are done. Run review/integration or create the next task card."

@@ -121,6 +121,10 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
+          $statusOutput = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamStatus.ps1")
+          if (($statusOutput -join "`n") -notmatch "fix: demo-002") {
+            throw "Expected failed demo-002 to be recommended for fix."
+          }
 
           $state = Get-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Raw -Encoding UTF8 | ConvertFrom-Json
           $demo1 = $state.tasks | Where-Object { $_.task_id -eq "demo-001" } | Select-Object -First 1
