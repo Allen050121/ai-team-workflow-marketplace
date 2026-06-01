@@ -115,7 +115,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path $project | Out-Null
           Copy-Item -LiteralPath $template -Destination (Join-Path $project ".ai-team") -Recurse
 
-          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -AllowedFiles "docs/demo.md"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -AllowedFiles "src/**"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
@@ -133,6 +133,7 @@ jobs:
           $demo1 = $state.tasks | Where-Object { $_.task_id -eq "demo-001" } | Select-Object -First 1
           $demo2 = $state.tasks | Where-Object { $_.task_id -eq "demo-002" } | Select-Object -First 1
           if ($demo1.verification_status -ne "passed") { throw "demo-001 verification did not sync" }
+          if ($demo1.work_mode -ne "Production") { throw "demo-001 work mode did not sync" }
           if ($demo2.verification_status -ne "failed") { throw "demo-002 verification did not sync" }
           if ($demo2.blocked_reason -ne "Missing test fixture") { throw "demo-002 blocker did not sync" }
 

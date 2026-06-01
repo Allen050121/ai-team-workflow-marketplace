@@ -91,6 +91,14 @@ foreach ($jsonPath in @("config.json", "commands.json", "state\tasks.json", "sta
     Test-JsonFile $jsonPath
 }
 
+$taskTemplatePath = Join-Path $aiTeamRoot "tasks\TEMPLATE.md"
+if (Test-Path -LiteralPath $taskTemplatePath) {
+    $taskTemplate = Get-Content -LiteralPath $taskTemplatePath -Raw -Encoding UTF8
+    if ($taskTemplate -notmatch "(?m)^work_mode:") {
+        Add-CheckError "Task template is missing work_mode."
+    }
+}
+
 Test-PowerShellSyntax "scripts"
 Test-PowerShellSyntax "hooks"
 

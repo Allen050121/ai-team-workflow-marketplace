@@ -91,6 +91,9 @@ foreach ($file in $taskFiles) {
     $mode = Get-Field $content "mode"
     if (-not $mode) { $mode = "serial" }
 
+    $workMode = Get-Field $content "work_mode"
+    if (-not $workMode) { $workMode = "MVP" }
+
     $branch = Get-Field $content "branch"
     $githubIssue = Get-Field $content "github_issue"
     $githubPr = Get-Field $content "github_pr"
@@ -127,6 +130,7 @@ foreach ($file in $taskFiles) {
         title = $title
         status = $status
         mode = $mode
+        work_mode = $workMode
         branch = $branch
         github_issue = $githubIssue
         github_pr = $githubPr

@@ -163,6 +163,7 @@ if ($stateTasks.Count -gt 0) {
     Write-Host "Tasks:"
     foreach ($task in $stateTasks) {
         Write-Host ("- {0} [{1}] {2}" -f $task.task_id, $task.status, $task.title)
+        if ($task.work_mode) { Write-Host ("  Work mode: {0}" -f $task.work_mode) }
         if ($task.business) { Write-Host ("  Business: {0}" -f $task.business) }
         if ($task.dependencies -and @($task.dependencies).Count -gt 0) {
             Write-Host ("  Dependencies: {0}" -f (@($task.dependencies) -join ", "))

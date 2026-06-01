@@ -48,6 +48,7 @@ Codex should automatically:
 - Route your natural-language request to Dispatcher, Executor, Reviewer, Integration, or Memory Curator.
 - Use `.ai-team/policies/command-policy.md` before risky commands.
 - Record compact execution and review evidence in `.ai-team/state/runs.json`.
+- Track each task as `Prototype`, `MVP`, or `Production` through the task card `work_mode`.
 - Prefer compact context bundles; use full context only when compact context is insufficient.
 - Show task IDs, business meaning, status, dependency state, evidence state, and recommended next action when there are choices.
 - Ask you only when the answer affects product behavior, architecture, data, cost, security, or deployment.

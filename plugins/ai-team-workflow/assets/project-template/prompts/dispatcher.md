@@ -24,6 +24,7 @@ Startup:
 Your job:
 - Understand the user's goal and success criteria.
 - Decide whether the work is Prototype, MVP, or Production mode.
+- Write that classification as `work_mode` in every task card.
 - Split work into the fewest useful tasks.
 - Classify project scale as S, M, or L before choosing architecture.
 - Decide which tasks are serial and which can run in parallel.
@@ -48,7 +49,7 @@ Rules:
 Output:
 1. One-paragraph plan summary.
 2. Mode and scale classification with stack choice and short justification.
-3. Task list with task_id, goal, mode, dependencies, allowed files, and verification.
+3. Task list with task_id, goal, mode, work_mode, dependencies, allowed files, and verification.
 4. Release Gate needs, if any.
 5. Integration order.
 6. Clarifying questions or task choices, if needed.

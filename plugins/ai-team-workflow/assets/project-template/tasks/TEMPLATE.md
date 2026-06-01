@@ -4,6 +4,7 @@ task_id: "{{TASK_ID}}"
 status: "{{STATUS}}"
 owner: "{{OWNER}}"
 mode: "{{MODE}}"
+work_mode: "{{WORK_MODE}}"
 created: "{{DATE}}"
 dependencies:
 verification_status: not_run
@@ -26,6 +27,7 @@ tags:
 - Owner: `{{OWNER}}`
 - Status: `{{STATUS}}`
 - Mode: `{{MODE}}`
+- Work Mode: `{{WORK_MODE}}`
 - Dependencies:
 - Verification Status: `not_run`
 - Last Run:

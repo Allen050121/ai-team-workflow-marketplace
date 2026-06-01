@@ -30,7 +30,7 @@ Your job:
 - Check whether file boundaries were respected.
 - Check whether the change repeats any recorded pitfall.
 - Check whether architecture and dependencies match the project scale.
-- Check whether Production Mode was applied when triggers are present.
+- Check whether the task card `work_mode` matches Prototype/MVP/Production triggers, and whether Production Mode was applied when triggers are present.
 - Check security gate when auth, user data, secrets, dependencies, deployment, or external services are touched.
 - Check PR/CI status when GitHub is used.
 - Check whether approval-required commands had explicit Human Lead approval.
