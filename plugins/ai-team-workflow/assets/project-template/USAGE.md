@@ -75,6 +75,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Get-AiTeamC
 
 Use `-Mode standard` or `-Full` only when the compact bundle is not enough.
 
+## Health Check
+
+When a project feels out of sync, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamProject.ps1
+```
+
+This checks the `.ai-team` structure, JSON files, PowerShell syntax, task state sync, status output, and compact context output.
+
 ## Optional Fallback
 
 Use `.ai.cmd` only if Codex is not reading the project files or if you are in a different tool:

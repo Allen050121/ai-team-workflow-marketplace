@@ -39,6 +39,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-
 
 它只更新工作流管理的文件，例如 scripts、prompts、checklists、policies、hooks 和模板文件。项目记忆、任务卡、任务状态、repo map 和 commands 会被保留。
 
+## 检查项目
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamProject.ps1
+```
+
+这会快速检查当前项目里的 AI Team 工作流文件是否完整可用。
+
 ## Codex 日常使用
 
 直接说真实需求：

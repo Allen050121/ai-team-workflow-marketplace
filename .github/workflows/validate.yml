@@ -102,6 +102,7 @@ jobs:
             "state/runs.json",
             "policies/command-policy.md",
             "checklists/release-gate.md",
+            "scripts/Test-AiTeamProject.ps1",
             "scripts/Update-AiTeamRun.ps1"
           )) {
             if (-not (Test-Path -LiteralPath (Join-Path $template $file))) {
@@ -121,6 +122,7 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamProject.ps1") | Out-Null
           $statusOutput = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamStatus.ps1")
           if (($statusOutput -join "`n") -notmatch "fix: demo-002") {
             throw "Expected failed demo-002 to be recommended for fix."

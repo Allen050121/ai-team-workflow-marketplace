@@ -39,6 +39,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-
 
 This updates workflow-managed files such as scripts, prompts, checklists, policies, hooks, and templates. It preserves project memory, task cards, task state, repo map, and commands.
 
+## Check A Project
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamProject.ps1
+```
+
+This gives a quick local health check for the AI Team workflow files.
+
 ## Normal Codex Use
 
 Say the real product work:
