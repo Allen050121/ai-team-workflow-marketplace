@@ -41,8 +41,15 @@ if (-not (Test-Path -LiteralPath $templatePath)) {
     throw "Missing task template: $templatePath"
 }
 
-if ($AllowedFiles.Count -gt 0) {
-    $allowed = ($AllowedFiles | ForEach-Object { "- `$_" }) -join [Environment]::NewLine
+$normalizedAllowedFiles = @(
+    $AllowedFiles |
+        ForEach-Object { "$_" -split "," } |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { $_ }
+)
+
+if ($normalizedAllowedFiles.Count -gt 0) {
+    $allowed = ($normalizedAllowedFiles | ForEach-Object { "- {0}" -f $_ }) -join [Environment]::NewLine
 }
 else {
     $allowed = "- Dispatcher must fill this in before Executor starts."

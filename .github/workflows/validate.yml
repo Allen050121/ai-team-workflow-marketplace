@@ -116,8 +116,14 @@ jobs:
           New-Item -ItemType Directory -Force -Path $project | Out-Null
           Copy-Item -LiteralPath $template -Destination (Join-Path $project ".ai-team") -Recurse
 
-          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md,docs/notes.md"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -AllowedFiles "src/**"
+          $demo1Card = Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/demo-001.md") -Raw -Encoding UTF8
+          $demo2Card = Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/demo-002.md") -Raw -Encoding UTF8
+          if ($demo1Card -notmatch "- docs/demo\.md") { throw "demo-001 allowed files did not render docs/demo.md correctly." }
+          if ($demo1Card -notmatch "- docs/notes\.md") { throw "demo-001 allowed files did not render docs/notes.md correctly." }
+          if ($demo2Card -notmatch "- src/\*\*") { throw "demo-002 allowed files did not render correctly." }
+          if ($demo1Card.Contains('- $_') -or $demo2Card.Contains('- $_')) { throw 'Allowed files rendered as literal $_.' }
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Sync-AiTeamState.ps1")
