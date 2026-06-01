@@ -75,6 +75,39 @@ function Test-CommandRiskClassifier {
     }
 }
 
+function Test-TaskFileBoundaries {
+    $tasksDir = Join-Path $aiTeamRoot "tasks"
+    if (-not (Test-Path -LiteralPath $tasksDir)) { return }
+
+    foreach ($taskFile in Get-ChildItem -LiteralPath $tasksDir -Filter "*.md" -File) {
+        if ($taskFile.Name -eq "TEMPLATE.md") { continue }
+
+        $content = Get-Content -LiteralPath $taskFile.FullName -Raw -Encoding UTF8
+        if ($content -match '(?m)^\s*-\s+`?\$_`?\s*$') {
+            Add-CheckError ("Task boundary in .ai-team/tasks/{0} contains literal '- `$_'. Regenerate or fix Allowed To Modify." -f $taskFile.Name)
+        }
+
+        $match = [regex]::Match($content, "(?ms)^### Allowed To Modify\s*(?<body>.*?)(?:^### |^## |\z)")
+        if (-not $match.Success) {
+            Add-CheckError "Task card .ai-team/tasks/$($taskFile.Name) is missing an Allowed To Modify section."
+            continue
+        }
+
+        $allowedLines = @(
+            $match.Groups["body"].Value -split "\r?\n" |
+                ForEach-Object { $_.Trim() } |
+                Where-Object { $_ -match "^\-\s+\S" }
+        )
+
+        foreach ($line in $allowedLines) {
+            $boundary = $line -replace "^\-\s+", ""
+            if ($boundary -match ",") {
+                Add-CheckError "Task boundary in .ai-team/tasks/$($taskFile.Name) appears to combine multiple paths on one line: $line"
+            }
+        }
+    }
+}
+
 Write-Host "AI Team project health check"
 Write-Host "Project: $ProjectRoot"
 Write-Host ""
@@ -127,6 +160,7 @@ if (Test-Path -LiteralPath $taskTemplatePath) {
 Test-PowerShellSyntax "scripts"
 Test-PowerShellSyntax "hooks"
 Test-CommandRiskClassifier
+Test-TaskFileBoundaries
 
 if (-not $SkipSync) {
     $syncScript = Join-Path $aiTeamRoot "scripts\Sync-AiTeamState.ps1"
