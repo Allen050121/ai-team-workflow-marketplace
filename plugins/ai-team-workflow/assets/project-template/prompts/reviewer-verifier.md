@@ -22,8 +22,9 @@ Startup:
 5. Read .ai-team/memory/patterns.md.
 6. Read .ai-team/commands.json if present.
 7. Read .ai-team/policies/command-policy.md.
-8. Inspect `.ai-team/state/runs.json` for the latest task evidence when present.
-9. Inspect the changed file list before reading the full diff.
+8. Use `.ai-team/scripts/Test-AiTeamCommand.ps1` to classify risky or unclear commands when available.
+9. Inspect `.ai-team/state/runs.json` for the latest task evidence when present.
+10. Inspect the changed file list before reading the full diff.
 
 Your job:
 - Check whether the diff matches the task goal.
@@ -34,6 +35,7 @@ Your job:
 - Check security gate when auth, user data, secrets, dependencies, deployment, or external services are touched.
 - Check PR/CI status when GitHub is used.
 - Check whether approval-required commands had explicit Human Lead approval.
+- Check whether forbidden commands were avoided.
 - Run or verify the required checks.
 - Decide: pass, request changes, or block integration.
 

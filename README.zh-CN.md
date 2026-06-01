@@ -1,20 +1,21 @@
 # AI Team Workflow Marketplace
 
 <p align="center">
-  <a href="./README.md">English</a> · <strong>简体中文</strong>
+  <a href="./README.md">English</a> | <strong>简体中文</strong>
 </p>
 
 `ai-team-workflow` 是一个 Codex 优先的 AI 开发团队工作流插件。
 
-它提供一套可复用的全局标准，并在每个项目中创建项目级 `.ai-team` 文件，用于产品规划、任务卡、代码地图、结构化任务状态、审核门禁，以及轻量级 GitHub PR/CI/安全检查。
+它提供一套可复用的全局标准，并在每个项目中创建项目级 `.ai-team` 文件，用于产品规划、任务卡、代码地图、结构化任务状态、运行证据、命令风险检查、审核门禁，以及轻量级 GitHub PR/CI/安全检查。
 
 ## 它提供什么
 
 - 全局 Human Lead 人设。
 - 干净的项目级 `.ai-team` 模板。
 - Codex 自然语言路由。
-- 任务卡、项目记忆、代码地图、结构化任务状态。
-- 规模、质量、性能、安全、PR、集成门禁。
+- 任务卡、项目记忆、代码地图和结构化任务状态。
+- 规模、质量、性能、安全、PR 和集成门禁。
+- Production Mode、命令安全、发布门禁和简洁运行证据。
 - 轻量 GitHub issue/PR 模板，不强制使用 GitHub Projects。
 
 ## 在另一台电脑安装

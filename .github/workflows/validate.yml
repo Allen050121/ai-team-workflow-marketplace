@@ -103,6 +103,7 @@ jobs:
             "memory/production-mode.md",
             "policies/command-policy.md",
             "checklists/release-gate.md",
+            "scripts/Test-AiTeamCommand.ps1",
             "scripts/Test-AiTeamProject.ps1",
             "scripts/Update-AiTeamRun.ps1"
           )) {
@@ -123,6 +124,14 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
+          $safeCommand = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamCommand.ps1") -Command "git status --short" -Json | ConvertFrom-Json
+          $approvalCommand = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamCommand.ps1") -Command "npm install left-pad" -Json | ConvertFrom-Json
+          $forbiddenCommand = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamCommand.ps1") -Command "git reset --hard" -Json | ConvertFrom-Json
+          $bypassCommand = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamCommand.ps1") -Command "git commit --no-verify" -Json | ConvertFrom-Json
+          if ($safeCommand.risk -ne "safe") { throw "Expected git status to be safe." }
+          if ($approvalCommand.risk -ne "approval_required") { throw "Expected npm install to require approval." }
+          if ($forbiddenCommand.risk -ne "forbidden") { throw "Expected git reset --hard to be forbidden." }
+          if ($bypassCommand.risk -ne "forbidden") { throw "Expected git commit --no-verify to be forbidden." }
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamProject.ps1") | Out-Null
           $statusOutput = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamStatus.ps1")
           if (($statusOutput -join "`n") -notmatch "fix: demo-002") {

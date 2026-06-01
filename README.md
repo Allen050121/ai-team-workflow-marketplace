@@ -6,7 +6,7 @@
 
 `ai-team-workflow` is a Codex-first AI development team workflow plugin.
 
-It provides a reusable global standard plus project-local `.ai-team` files for product planning, task cards, repo maps, structured task state, review gates, and lightweight GitHub PR/CI/security checks.
+It provides a reusable global standard plus project-local `.ai-team` files for product planning, task cards, repo maps, structured task state, run evidence, command risk checks, review gates, and lightweight GitHub PR/CI/security checks.
 
 ## What It Provides
 
@@ -15,6 +15,7 @@ It provides a reusable global standard plus project-local `.ai-team` files for p
 - Natural-language routing for Codex.
 - Task cards, project memory, repo map, and structured task state.
 - Scale, quality, performance, security, PR, and integration gates.
+- Production mode, command safety, release gates, and compact run evidence.
 - Lightweight GitHub issue/PR templates without forcing GitHub Projects.
 
 ## Install On Another Computer

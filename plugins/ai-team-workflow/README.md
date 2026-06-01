@@ -18,6 +18,7 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Repo map and structured task state for more reliable "continue" behavior.
 - Compact run evidence in `.ai-team/state/runs.json`, so execution and review results do not disappear into chat history.
 - Command safety policy for dependency, data, deployment, git push, and external-service actions.
+- Lightweight command risk classifier for `safe`, `approval_required`, and `forbidden` decisions.
 - Release gate for deployment, rollback, smoke test, and production approval checks.
 
 ## Install Global Template
@@ -68,6 +69,6 @@ Codex should inspect `.ai-team/tasks/`, `.ai-team/state/tasks.json`, and `.ai-te
 
 - Executors stay inside task boundaries and record compact run evidence.
 - Dispatcher classifies work as Prototype, MVP, or Production before choosing architecture and gates.
-- Reviewers check diffs, verification, command policy, and task evidence before passing work.
+- Reviewers check diffs, verification, command risk classification, policy, and task evidence before passing work.
 - Integration uses GitHub/CI gates when available and release gate for deployment or publishing.
 - Production-facing actions still require Human Lead approval.

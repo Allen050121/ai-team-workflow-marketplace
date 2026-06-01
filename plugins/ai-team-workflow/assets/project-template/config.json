@@ -28,6 +28,7 @@
   "repoMap": ".ai-team/index/repo-map.md",
   "commands": ".ai-team/commands.json",
   "commandPolicy": ".ai-team/policies/command-policy.md",
+  "commandRiskClassifier": ".ai-team/scripts/Test-AiTeamCommand.ps1",
   "releaseGate": ".ai-team/checklists/release-gate.md",
   "defaultWorktreeRootName": ".ai-team-worktrees",
   "rolePrompts": {

@@ -4,7 +4,7 @@
   <a href="./README.md">English</a> | <strong>简体中文</strong>
 </p>
 
-这是一个 Codex-first 的 AI 开发团队工作流插件，用来把全局标准和项目内 `.ai-team` 模板安装到你的开发环境里。
+这是一个 Codex 优先的 AI 开发团队工作流插件，用来把全局标准和项目内 `.ai-team` 模板安装到你的开发环境里。
 
 ## 它实现了什么
 
@@ -18,6 +18,7 @@
 - 代码地图和结构化任务状态，让“继续”更可靠。
 - `.ai-team/state/runs.json` 运行证据账本，执行和审核结果不会散落在聊天记录里。
 - 命令安全策略，用于依赖安装、数据操作、部署、git push 和外部服务动作。
+- 轻量命令风险分类器，用于判断 `safe`、`approval_required`、`forbidden`。
 - 发布门禁，用于部署、回滚、烟测和生产审批检查。
 
 ## 安装全局模板
@@ -53,7 +54,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 直接说真实需求：
 
 ```text
-我要做一个产品：xxx。遇到关键选择先问我。
+我想做一个产品：xxx。遇到关键选择先问我。
 ```
 
 后续直接说：
@@ -68,6 +69,6 @@ Codex 应该自动读取 `.ai-team/tasks/`、`.ai-team/state/tasks.json` 和 `.a
 
 - Executor 在任务边界内实现，并记录简洁运行证据。
 - Dispatcher 先判断工作属于 Prototype、MVP 还是 Production，再选择架构和门禁。
-- Reviewer 在通过前检查 diff、验证结果、命令安全策略和任务证据。
+- Reviewer 在通过前检查 diff、验证结果、命令风险分类、命令安全策略和任务证据。
 - Integration 在可用时使用 GitHub/CI 门禁，部署或发布前使用 Release Gate。
 - 涉及生产、外部服务、付费资源或高风险命令时，仍然需要 Human Lead 批准。
