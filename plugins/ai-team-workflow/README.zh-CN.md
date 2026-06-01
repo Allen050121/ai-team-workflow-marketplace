@@ -13,6 +13,7 @@
 - Codex 自然语言路由规则。
 - 任务卡、记忆文件、角色提示词和质量门禁。
 - 规模、质量、性能门禁，避免屎山代码和过度设计。
+- Production Mode 策略，用于真实用户、持久化数据、登录、支付、部署和外部服务。
 - 与任务卡融合的轻量 GitHub PR、CI、安全门禁。
 - 代码地图和结构化任务状态，让“继续”更可靠。
 - `.ai-team/state/runs.json` 运行证据账本，执行和审核结果不会散落在聊天记录里。
@@ -66,6 +67,7 @@ Codex 应该自动读取 `.ai-team/tasks/`、`.ai-team/state/tasks.json` 和 `.a
 ## 生产级约束
 
 - Executor 在任务边界内实现，并记录简洁运行证据。
+- Dispatcher 先判断工作属于 Prototype、MVP 还是 Production，再选择架构和门禁。
 - Reviewer 在通过前检查 diff、验证结果、命令安全策略和任务证据。
 - Integration 在可用时使用 GitHub/CI 门禁，部署或发布前使用 Release Gate。
 - 涉及生产、外部服务、付费资源或高风险命令时，仍然需要 Human Lead 批准。

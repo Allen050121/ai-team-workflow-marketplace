@@ -13,6 +13,7 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Natural-language routing rules for Codex.
 - Task cards, memory files, prompts, and quality gates.
 - Scale, quality, and performance gates to avoid both messy code and overengineering.
+- Production Mode policy for real users, durable data, auth, payments, deployment, and external services.
 - Lightweight GitHub PR, CI, and security gates integrated with task cards.
 - Repo map and structured task state for more reliable "continue" behavior.
 - Compact run evidence in `.ai-team/state/runs.json`, so execution and review results do not disappear into chat history.
@@ -66,6 +67,7 @@ Codex should inspect `.ai-team/tasks/`, `.ai-team/state/tasks.json`, and `.ai-te
 ## Production Guardrails
 
 - Executors stay inside task boundaries and record compact run evidence.
+- Dispatcher classifies work as Prototype, MVP, or Production before choosing architecture and gates.
 - Reviewers check diffs, verification, command policy, and task evidence before passing work.
 - Integration uses GitHub/CI gates when available and release gate for deployment or publishing.
 - Production-facing actions still require Human Lead approval.

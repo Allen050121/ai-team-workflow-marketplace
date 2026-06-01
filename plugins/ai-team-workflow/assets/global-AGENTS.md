@@ -11,6 +11,7 @@ Codex should use this global AI Team standard in every project.
 - If `.ai-team/` does not exist, offer to initialize it from `C:\Users\18846\.codex\ai-team\project-template`.
 - Project facts, product tasks, and product decisions must live in the project directory, not in the global `.codex` directory.
 - Keep architecture proportional to project scale using project `.ai-team/memory/technology-policy.md` after initialization.
+- Use project `.ai-team/memory/production-mode.md` to decide Prototype, MVP, or Production mode when present.
 - Use project `.ai-team/policies/command-policy.md` before risky commands.
 - Use project `.ai-team/state/runs.json` for compact execution, review, and integration evidence when present.
 
