@@ -108,6 +108,41 @@ function Test-TaskFileBoundaries {
     }
 }
 
+function Test-CompactContext {
+    $contextScript = Join-Path $aiTeamRoot "scripts\Get-AiTeamContext.ps1"
+    $tasksDir = Join-Path $aiTeamRoot "tasks"
+    if (-not (Test-Path -LiteralPath $contextScript) -or -not (Test-Path -LiteralPath $tasksDir)) { return }
+
+    $taskFile = Get-ChildItem -LiteralPath $tasksDir -Filter "*.md" |
+        Where-Object { $_.Name -ne "TEMPLATE.md" } |
+        Sort-Object Name |
+        Select-Object -First 1
+
+    if (-not $taskFile) { return }
+
+    $taskId = $taskFile.BaseName
+    $taskContent = Get-Content -LiteralPath $taskFile.FullName -Raw -Encoding UTF8
+    if ($taskContent -match '(?m)^task_id:[ \t]*["'']?([^"''\r\n]+)') {
+        $taskId = $Matches[1].Trim()
+    }
+
+    try {
+        $context = powershell -NoProfile -ExecutionPolicy Bypass -File $contextScript -TaskId $taskId
+        $text = $context -join [Environment]::NewLine
+        foreach ($required in @("===== Task: $taskId =====", "===== Task State =====", "===== Recent Run Evidence =====")) {
+            if (-not $text.Contains($required)) {
+                Add-CheckError "Compact context is missing expected section: $required"
+            }
+        }
+        if ($text -match '"tasks"' -or $text -match '"runs"') {
+            Add-CheckError "Compact context dumped JSON state instead of summaries."
+        }
+    }
+    catch {
+        Add-CheckError "Compact context failed for task '$taskId': $($_.Exception.Message)"
+    }
+}
+
 Write-Host "AI Team project health check"
 Write-Host "Project: $ProjectRoot"
 Write-Host ""
@@ -161,6 +196,7 @@ Test-PowerShellSyntax "scripts"
 Test-PowerShellSyntax "hooks"
 Test-CommandRiskClassifier
 Test-TaskFileBoundaries
+Test-CompactContext
 
 if (-not $SkipSync) {
     $syncScript = Join-Path $aiTeamRoot "scripts\Sync-AiTeamState.ps1"
