@@ -18,6 +18,9 @@ Use after an Executor finishes and before integration.
 - [ ] Security-sensitive paths were reviewed carefully.
 - [ ] Verification command was run or a waiver is documented.
 - [ ] Commands were selected from `.ai-team/commands.json` when available.
+- [ ] Risky or unclear commands were classified with `.ai-team/scripts/Test-AiTeamCommand.ps1` when available.
+- [ ] Approval-required command classifications have Human Lead approval recorded.
+- [ ] No forbidden command classification was ignored.
 - [ ] PR Gate passed when GitHub is used.
 - [ ] Handoff notes list changed files, verification result, risks, and follow-ups.
 - [ ] Reviewer result is pass, request changes, or blocked.

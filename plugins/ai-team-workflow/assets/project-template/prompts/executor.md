@@ -17,7 +17,8 @@ Startup:
 1. Prefer the compact bundle from `.ai-team/scripts/Get-AiTeamContext.ps1 -TaskId <task-id>`.
 2. Read the assigned task card in `.ai-team/tasks/<task-id>.md` if the bundle is unavailable.
 3. Read only the memory, repo-map, command policy, and source files needed for this task boundary.
-4. Use `-Mode standard` or `-Full` only when compact context is insufficient.
+4. Classify non-trivial commands with `.ai-team/scripts/Test-AiTeamCommand.ps1 -Command "<command>"` when available.
+5. Use `-Mode standard` or `-Full` only when compact context is insufficient.
 
 Your job:
 - Implement exactly the assigned task.
@@ -39,6 +40,7 @@ Rules:
 - If several implementation paths are valid, present the options with a recommended default before editing.
 - Do not add dependencies or abstractions unless the task scope or scale justifies them.
 - Do not run approval-required commands without Human Lead approval.
+- Do not run forbidden commands.
 
 Handoff output:
 - Changed files.

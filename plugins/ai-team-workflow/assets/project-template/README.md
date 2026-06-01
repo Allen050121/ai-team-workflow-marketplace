@@ -70,6 +70,12 @@ Show current task and run status:
 powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Get-AiTeamStatus.ps1
 ```
 
+Classify command risk before unclear or risky commands:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamCommand.ps1 -Command "npm install <package>"
+```
+
 Print an agent startup bundle:
 
 ```powershell
@@ -95,6 +101,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - No Executor approves its own work.
 - No task is done without a reproducible verification command or an explicit reason why verification is impossible.
 - Approval-required commands must follow `.ai-team/policies/command-policy.md`.
+- Unknown commands default to approval-required when classified by `.ai-team/scripts/Test-AiTeamCommand.ps1`.
 - Deployment, publishing, release tagging, and production-facing actions must pass Release Gate.
 - Memory must be compressed and reusable. Full transcripts, raw logs, run ledgers, and one-off observations do not belong in memory.
 
@@ -105,6 +112,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - `.ai-team/prompts/`: role prompts for Dispatcher, Executor, Reviewer, and Memory Curator.
 - `.ai-team/checklists/`: plan, review, security, release, and integration gates.
 - `.ai-team/policies/command-policy.md`: safe, approval-required, and forbidden command classes.
+- `.ai-team/scripts/Test-AiTeamCommand.ps1`: lightweight command risk classifier.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.
 - `.ai-team/commands.json`: project verification commands used by Reviewer/Verifier.

@@ -10,6 +10,14 @@ status: active
 
 Use this policy before running commands during execution, review, integration, or release work.
 
+When available, classify commands with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamCommand.ps1 -Command "<command>"
+```
+
+The classifier is conservative: unknown commands require approval instead of being treated as safe.
+
 ## Safe By Default
 
 These commands are normally allowed without extra approval when they stay inside the current project:
@@ -42,5 +50,6 @@ Do not run or recommend these actions:
 ## Recording
 
 - Executor records command results in the task card handoff and `.ai-team/state/runs.json`.
+- Executor records command risk decisions for approval-required or forbidden commands.
 - Reviewer checks whether approval-required commands had explicit approval.
 - Integration Gate blocks release when command policy evidence is missing for risky actions.

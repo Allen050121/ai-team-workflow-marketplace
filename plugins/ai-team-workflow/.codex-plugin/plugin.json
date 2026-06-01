@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0+codex.20260601025617",
+  "version": "0.2.0+codex.20260601031907",
   "name": "ai-team-workflow",
   "skills": "./skills/",
   "description": "Codex-first AI Team workflow with global templates, Human Lead profile, production mode, task state, run evidence, repo map, command safety, release gates, and lightweight GitHub gates.",
@@ -19,9 +19,10 @@
       "Run evidence",
       "Production mode",
       "Command safety",
+      "Command risk classifier",
       "Release gate"
     ],
-    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, production mode routing, task cards, structured task state, compact run evidence, repo maps, natural-language routing, scale-aware quality gates, command safety policy, release gates, and lightweight GitHub PR/CI/security gates.",
+    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, production mode routing, task cards, structured task state, compact run evidence, repo maps, natural-language routing, scale-aware quality gates, command safety policy, command risk classification, release gates, and lightweight GitHub PR/CI/security gates.",
     "shortDescription": "Codex-first AI team workflow and project template.",
     "defaultPrompt": "Set up or use the AI Team Workflow for this project.",
     "category": "Productivity"
