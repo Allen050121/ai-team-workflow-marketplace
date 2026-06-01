@@ -16,6 +16,7 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Production Mode policy for real users, durable data, auth, payments, deployment, and external services.
 - Lightweight GitHub PR, CI, and security gates integrated with task cards.
 - Repo map and structured task state for more reliable "continue" behavior.
+- Project Intake Gate that detects new projects, existing codebases, AI Team projects, mixed directories, and unclear directories before planning.
 - Compact run evidence in `.ai-team/state/runs.json`, so execution and review results do not disappear into chat history.
 - Command safety policy for dependency, data, deployment, git push, and external-service actions.
 - Lightweight command risk classifier for `safe`, `approval_required`, and `forbidden` decisions.
@@ -64,6 +65,8 @@ Continue
 ```
 
 Codex should inspect `.ai-team/tasks/`, `.ai-team/state/tasks.json`, and `.ai-team/state/runs.json` to decide the next role and action. You should not need to paste fixed role prompts or status commands during normal use.
+
+For unfamiliar directories, Codex should first apply the Project Intake Gate. You can simply say "I want to add subscriptions" or "I want to build a bookkeeping app"; Codex should detect whether it is in a new project, existing codebase, AI Team project, mixed/notes directory, or unclear directory, then ask only decision-changing questions before writing code.
 
 ## Production Guardrails
 

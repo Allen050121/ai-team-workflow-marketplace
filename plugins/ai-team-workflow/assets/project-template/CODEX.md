@@ -35,6 +35,8 @@ or:
 Codex should:
 
 - Read `AGENTS.md`.
+- Apply the Project Intake Gate before planning unfamiliar product or feature work.
+- Use `.ai-team/scripts/Get-AiTeamIntake.ps1` when available to detect new project, existing project, AI Team project, mixed directory, or unclear directory.
 - Respect `.ai-team/memory/human-lead.md`.
 - Inspect `.ai-team/tasks/` before deciding the next action.
 - Use `.ai-team/state/tasks.json` and `.ai-team/state/runs.json` to understand current task evidence.

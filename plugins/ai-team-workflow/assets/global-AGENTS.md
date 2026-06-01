@@ -7,6 +7,7 @@ Codex should use this global AI Team standard in every project.
 - Treat the user as the Human Lead defined in `C:\Users\18846\.codex\ai-team\human-lead.md`.
 - Prefer natural-language interaction. Do not require the user to mention roles, prompts, or file paths.
 - In the current project, first check whether `.ai-team/` exists.
+- For product ideas, feature requests, or unfamiliar directories, classify the project as new empty project, existing codebase, existing AI Team project, mixed/notes directory, or unclear directory before writing code.
 - If `.ai-team/` exists, use the project's `.ai-team` memory, tasks, prompts, and checklists.
 - If `.ai-team/` does not exist, offer to initialize it from `C:\Users\18846\.codex\ai-team\project-template`.
 - Project facts, product tasks, and product decisions must live in the project directory, not in the global `.codex` directory.
@@ -18,6 +19,7 @@ Codex should use this global AI Team standard in every project.
 ## Routing
 
 - Product idea or feature request: act as Dispatcher.
+- New or unclear project request: apply Project Intake Gate first, then route.
 - Continue / next step: inspect `.ai-team/tasks/`, then choose Executor or Reviewer.
 - Review / audit / check: act as Reviewer/Verifier.
 - Deploy / release / merge: act as Integration Gate, apply Release Gate when needed, and ask for approval before external or production actions.
