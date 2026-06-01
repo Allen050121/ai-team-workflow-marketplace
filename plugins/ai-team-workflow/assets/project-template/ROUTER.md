@@ -23,12 +23,20 @@ Use this file when a tool supports project instructions such as `AGENTS.md`.
 
 ## Default Startup
 
+Before role routing, apply the Project Intake Gate when the request is a product idea, feature request, "continue", or the current directory is unfamiliar:
+
+- Prefer `.ai-team/scripts/Get-AiTeamIntake.ps1` when available.
+- Classify the directory as new empty project, existing codebase, existing AI Team project, mixed/notes directory, or unclear directory.
+- Do not trust the user's project label blindly when repository signals disagree.
+- Ask only decision-changing questions before writing code.
+
 Always load:
 
 - `.ai-team/memory/project-brief.md`
 - `.ai-team/memory/pitfalls.md`
 - `.ai-team/memory/patterns.md`
 - `.ai-team/policies/command-policy.md`
+- `.ai-team/checklists/project-intake-gate.md`
 
 Then load the routed role prompt:
 

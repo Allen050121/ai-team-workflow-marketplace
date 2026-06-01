@@ -106,6 +106,7 @@ jobs:
             "policies/command-policy.md",
             "checklists/release-gate.md",
             "scripts/Test-AiTeamCommand.ps1",
+            "scripts/Get-AiTeamIntake.ps1",
             "scripts/Test-AiTeamProject.ps1",
             "scripts/Update-AiTeamRun.ps1"
           )) {
@@ -117,6 +118,25 @@ jobs:
           $project = Join-Path $tmp "project"
           New-Item -ItemType Directory -Force -Path $project | Out-Null
           Copy-Item -LiteralPath $template -Destination (Join-Path $project ".ai-team") -Recurse
+
+          $emptyIntake = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamIntake.ps1") -Json | ConvertFrom-Json
+          if ($emptyIntake.project_type -ne "new_empty_project") { throw "Expected empty project intake to classify as new_empty_project." }
+
+          Set-Content -LiteralPath (Join-Path $project "package.json") -Encoding UTF8 -Value '{"scripts":{"build":"echo build"},"dependencies":{"next":"latest"}}'
+          New-Item -ItemType Directory -Force -Path (Join-Path $project "src") | Out-Null
+          $existingIntake = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamIntake.ps1") -Json | ConvertFrom-Json
+          if ($existingIntake.project_type -notin @("ai_team_project", "existing_project_with_ai_team")) {
+            throw "Expected project with source and .ai-team to classify as an AI Team existing project."
+          }
+
+          $mixedProject = Join-Path $tmp "mixed"
+          New-Item -ItemType Directory -Force -Path $mixedProject | Out-Null
+          Copy-Item -LiteralPath $template -Destination (Join-Path $mixedProject ".ai-team") -Recurse
+          foreach ($i in 1..10) {
+            Set-Content -LiteralPath (Join-Path $mixedProject "note-$i.md") -Encoding UTF8 -Value "note"
+          }
+          $mixedIntake = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $mixedProject ".ai-team/scripts/Get-AiTeamIntake.ps1") -Json | ConvertFrom-Json
+          if ($mixedIntake.project_type -ne "mixed_or_notes_directory") { throw "Expected mixed directory intake classification." }
 
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md,docs/notes.md"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -AllowedFiles "src/**"

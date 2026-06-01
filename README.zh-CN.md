@@ -6,13 +6,14 @@
 
 `ai-team-workflow` 是一个 Codex 优先的 AI 开发团队工作流插件。
 
-它提供一套可复用的全局标准，并在每个项目中创建项目级 `.ai-team` 文件，用于产品规划、任务卡、代码地图、结构化任务状态、运行证据、命令风险检查、审核门禁，以及轻量级 GitHub PR/CI/安全检查。
+它提供一套可复用的全局标准，并在每个项目中创建项目级 `.ai-team` 文件，用于产品规划、项目接管、任务卡、代码地图、结构化任务状态、运行证据、命令风险检查、审核门禁，以及轻量级 GitHub PR/CI/安全检查。
 
 ## 它提供什么
 
 - 全局 Human Lead 人设。
 - 干净的项目级 `.ai-team` 模板。
 - Codex 自然语言路由。
+- Project Intake Gate：自动识别新项目、已有代码库、已有 AI Team 项目、混合/笔记目录或不清晰目录。
 - 任务卡、项目记忆、代码地图和结构化任务状态。
 - 规模、质量、性能、安全、PR 和集成门禁。
 - Production Mode、命令安全、发布门禁和简洁运行证据。
@@ -69,4 +70,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-
 继续到部署前检查，但不要真正部署生产环境。
 ```
 
-Codex 应该读取全局标准，检查当前项目的 `.ai-team`，并自动路由后续工作。
+Codex 应该读取全局标准，检查当前项目的 `.ai-team`，应用 Project Intake Gate，并自动路由后续工作。

@@ -13,6 +13,7 @@
   ],
   "requiredGates": [
     ".ai-team/checklists/plan-gate.md",
+    ".ai-team/checklists/project-intake-gate.md",
     ".ai-team/checklists/scale-gate.md",
     ".ai-team/checklists/review-gate.md",
     ".ai-team/checklists/quality-gate.md",
@@ -26,6 +27,8 @@
   "taskState": ".ai-team/state/tasks.json",
   "runState": ".ai-team/state/runs.json",
   "repoMap": ".ai-team/index/repo-map.md",
+  "projectIntake": ".ai-team/scripts/Get-AiTeamIntake.ps1",
+  "projectIntakeGate": ".ai-team/checklists/project-intake-gate.md",
   "commands": ".ai-team/commands.json",
   "commandPolicy": ".ai-team/policies/command-policy.md",
   "commandRiskClassifier": ".ai-team/scripts/Test-AiTeamCommand.ps1",
@@ -40,6 +43,7 @@
   "hookBundles": {
     "dispatcher": [
       ".ai-team/prompts/dispatcher.md",
+      ".ai-team/checklists/project-intake-gate.md",
       ".ai-team/checklists/plan-gate.md"
     ],
     "executor": [
