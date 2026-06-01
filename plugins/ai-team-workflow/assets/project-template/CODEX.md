@@ -40,6 +40,8 @@ Codex should:
 - Use `.ai-team/memory/` for project context and lessons.
 - Use `.ai-team/prompts/` internally for the right role.
 - Use `.ai-team/checklists/` as gates.
+- Use `.ai-team/policies/command-policy.md` before risky commands.
+- Use `.ai-team/state/runs.json` for compact execution evidence.
 - Ask questions only at clarification or approval boundaries.
 
 ## User Responsibilities

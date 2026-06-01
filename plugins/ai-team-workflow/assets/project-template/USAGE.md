@@ -46,6 +46,8 @@ Codex should automatically:
 - Respect `.ai-team/memory/human-lead.md`.
 - Use `.ai-team/memory/technology-policy.md` to avoid both messy underengineering and expensive overengineering.
 - Route your natural-language request to Dispatcher, Executor, Reviewer, Integration, or Memory Curator.
+- Use `.ai-team/policies/command-policy.md` before risky commands.
+- Record compact execution and review evidence in `.ai-team/state/runs.json`.
 - Show task IDs, business meaning, status, dependency state, and recommended next action when there are choices.
 - Ask you only when the answer affects product behavior, architecture, data, cost, security, or deployment.
 - Update task cards and handoff notes as work progresses.
@@ -59,6 +61,10 @@ Only say the part that requires human judgment:
 - What not to build.
 - Deployment preference.
 - Approval for risky merge, external service, or production deployment.
+
+## Evidence Without Extra Work
+
+You do not need to paste fixed status commands during normal Codex use. Codex should keep task cards and `.ai-team/state/runs.json` updated so "continue" can see the latest task result, verification state, and blocker reason.
 
 ## Optional Fallback
 

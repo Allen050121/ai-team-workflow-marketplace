@@ -37,10 +37,12 @@ Show-File "Human Lead" (Join-Path $ProjectRoot ".ai-team\memory\human-lead.md")
 Show-File "Technology Policy" (Join-Path $ProjectRoot ".ai-team\memory\technology-policy.md")
 Show-File "Pitfalls" (Join-Path $ProjectRoot ".ai-team\memory\pitfalls.md") 120
 Show-File "Patterns" (Join-Path $ProjectRoot ".ai-team\memory\patterns.md") 120
+Show-File "Command Policy" (Join-Path $ProjectRoot ".ai-team\policies\command-policy.md")
 
 if ($TaskId) {
     $taskPath = Join-Path $ProjectRoot ".ai-team\tasks\$TaskId.md"
     Show-File "Task: $TaskId" $taskPath
+    Show-File "Recent Run Evidence" (Join-Path $ProjectRoot ".ai-team\state\runs.json") 160
 }
 else {
     Write-Host ""

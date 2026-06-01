@@ -20,13 +20,15 @@ Startup:
 4. Read .ai-team/index/repo-map.md if present.
 5. Read .ai-team/memory/pitfalls.md.
 6. Read .ai-team/memory/patterns.md.
-7. Read only the files relevant to your task boundary.
+7. Read .ai-team/policies/command-policy.md.
+8. Read only the files relevant to your task boundary.
 
 Your job:
 - Implement exactly the assigned task.
 - Stay inside the allowed file boundary.
 - Run or document the verification command.
 - Prepare a concise handoff for Reviewer/Verifier.
+- Record compact execution evidence in `.ai-team/state/runs.json`.
 - Pause and ask when the task card leaves a high-impact product or technical choice unresolved.
 - Keep code maintainable without adding unnecessary architecture.
 - Update `.ai-team/state/tasks.json` or run the sync script after task status changes.
@@ -39,10 +41,12 @@ Rules:
 - If you discover boundary conflict, stop and report it.
 - If several implementation paths are valid, present the options with a recommended default before editing.
 - Do not add dependencies or abstractions unless the task scope or scale justifies them.
+- Do not run approval-required commands without Human Lead approval.
 
 Handoff output:
 - Changed files.
 - What changed and why.
 - Verification command and result.
+- Run id from `.ai-team/state/runs.json`.
 - Any risks, follow-ups, or memory updates needed.
 ```

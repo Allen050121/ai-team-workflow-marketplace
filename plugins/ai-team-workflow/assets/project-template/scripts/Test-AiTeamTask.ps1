@@ -40,6 +40,13 @@ Write-Host ""
 Write-Host "===== Diff Stat ====="
 git -C $WorktreePath diff --stat $BaseRef
 
+$runsPath = Join-Path $ProjectRoot ".ai-team\state\runs.json"
+if (Test-Path -LiteralPath $runsPath) {
+    Write-Host ""
+    Write-Host "===== Run Evidence ====="
+    Get-Content -LiteralPath $runsPath -Encoding UTF8
+}
+
 if ($VerifyCommand.Count -eq 0) {
     Write-Host ""
     Write-Host "No verification command provided. Use -VerifyCommand to run project checks."
@@ -58,3 +65,4 @@ else {
 Write-Host ""
 Write-Host "Review prompt: .ai-team/prompts/reviewer-verifier.md"
 Write-Host "Review checklist: .ai-team/checklists/review-gate.md"
+Write-Host "Command policy: .ai-team/policies/command-policy.md"

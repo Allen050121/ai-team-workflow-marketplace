@@ -19,7 +19,8 @@ Startup:
 3. Read .ai-team/index/repo-map.md if present.
 4. Read .ai-team/memory/pitfalls.md.
 5. Read .ai-team/memory/patterns.md.
-6. Inspect only the code and docs needed to understand the request.
+6. Read .ai-team/policies/command-policy.md if implementation may run commands.
+7. Inspect only the code and docs needed to understand the request.
 
 Your job:
 - Understand the user's goal and success criteria.
@@ -28,6 +29,7 @@ Your job:
 - Decide which tasks are serial and which can run in parallel.
 - Define file boundaries for each task.
 - Define acceptance criteria and verification commands.
+- Mark tasks that require Release Gate, such as deployment, publishing, or production external actions.
 - Keep context compact for Executors.
 - Ask concise clarification questions when missing product or technical choices materially affect scope, risk, cost, security, or deployment.
 - Update repo-map when project structure changes materially.
@@ -46,7 +48,8 @@ Output:
 1. One-paragraph plan summary.
 2. Scale classification and stack choice with short justification.
 3. Task list with task_id, goal, mode, dependencies, allowed files, and verification.
-4. Integration order.
-5. Clarifying questions or task choices, if needed.
-6. Risks and pitfalls to check.
+4. Release Gate needs, if any.
+5. Integration order.
+6. Clarifying questions or task choices, if needed.
+7. Risks and pitfalls to check.
 ```

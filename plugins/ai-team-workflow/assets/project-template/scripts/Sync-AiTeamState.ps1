@@ -3,6 +3,7 @@ $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 $tasksDir = Join-Path $ProjectRoot ".ai-team\tasks"
 $stateDir = Join-Path $ProjectRoot ".ai-team\state"
 $statePath = Join-Path $stateDir "tasks.json"
+$runsPath = Join-Path $stateDir "runs.json"
 
 if (-not (Test-Path -LiteralPath $tasksDir)) {
     throw "Missing tasks directory: $tasksDir"
@@ -16,7 +17,7 @@ function Get-Field {
         [string]$Name
     )
 
-    if ($Content -match ("(?m)^" + [regex]::Escape($Name) + ":\s*[""']?([^""'\r\n]*)")) {
+    if ($Content -match ("(?m)^" + [regex]::Escape($Name) + ":[ \t]*[""']?([^""'\r\n]*)")) {
         return $Matches[1].Trim()
     }
     return $null
@@ -34,7 +35,44 @@ function Get-SectionSummary {
     return ""
 }
 
+function Get-ListField {
+    param(
+        [string]$Content,
+        [string]$Name
+    )
+
+    $value = Get-Field $Content $Name
+    if (-not $value) { return @() }
+
+    return @($value -split "," | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+}
+
+function Get-LatestRun {
+    param(
+        [array]$Runs,
+        [string]$TaskId
+    )
+
+    if (-not $Runs -or -not $TaskId) { return $null }
+
+    return $Runs |
+        Where-Object { $_.task_id -eq $TaskId } |
+        Sort-Object @{ Expression = { if ($_.finished_at) { $_.finished_at } else { $_.started_at } }; Descending = $true } |
+        Select-Object -First 1
+}
+
 $tasks = @()
+$runs = @()
+if (Test-Path -LiteralPath $runsPath) {
+    try {
+        $runsState = Get-Content -LiteralPath $runsPath -Encoding UTF8 -Raw | ConvertFrom-Json
+        if ($runsState.runs) { $runs = @($runsState.runs) }
+    }
+    catch {
+        Write-Host "Run state exists but could not be parsed: $runsPath"
+    }
+}
+
 $taskFiles = Get-ChildItem -LiteralPath $tasksDir -Filter "*.md" |
     Where-Object { $_.Name -ne "TEMPLATE.md" } |
     Sort-Object Name
@@ -57,8 +95,32 @@ foreach ($file in $taskFiles) {
     $githubIssue = Get-Field $content "github_issue"
     $githubPr = Get-Field $content "github_pr"
     $ciStatus = Get-Field $content "ci_status"
+    $dependencies = Get-ListField $content "dependencies"
+    $verificationStatus = Get-Field $content "verification_status"
+    $lastRunId = Get-Field $content "last_run_id"
+    $lastResult = Get-Field $content "last_result"
+    $blockedReason = Get-Field $content "blocked_reason"
     $business = Get-SectionSummary $content "Business Meaning"
     if (-not $business) { $business = Get-SectionSummary $content "Goal" }
+
+    $latestRun = Get-LatestRun $runs $taskId
+    if ($latestRun) {
+        if (-not $lastRunId) { $lastRunId = $latestRun.run_id }
+        if (-not $lastResult) { $lastResult = $latestRun.status }
+        if ($latestRun.blocked_reason -and -not $blockedReason) {
+            $blockedReason = $latestRun.blocked_reason
+        }
+        if ((-not $verificationStatus) -or $verificationStatus -eq "not_run") {
+            if ($latestRun.verification -and @($latestRun.verification).Count -gt 0) {
+                $verificationStatus = $latestRun.status
+            }
+            else {
+                $verificationStatus = "not_recorded"
+            }
+        }
+    }
+
+    if (-not $verificationStatus) { $verificationStatus = "not_run" }
 
     $tasks += [ordered]@{
         task_id = $taskId
@@ -69,6 +131,12 @@ foreach ($file in $taskFiles) {
         github_issue = $githubIssue
         github_pr = $githubPr
         ci_status = $ciStatus
+        dependencies = @($dependencies)
+        last_run_id = $lastRunId
+        last_result = $lastResult
+        blocked_reason = $blockedReason
+        verification_status = $verificationStatus
+        updated_at = (Get-Date).ToString("o")
         business = $business
         task_card = ".ai-team/tasks/$($file.Name)"
     }
