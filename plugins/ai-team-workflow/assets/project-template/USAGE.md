@@ -48,6 +48,7 @@ Codex should automatically:
 - Route your natural-language request to Dispatcher, Executor, Reviewer, Integration, or Memory Curator.
 - Use `.ai-team/policies/command-policy.md` before risky commands.
 - Record compact execution and review evidence in `.ai-team/state/runs.json`.
+- Prefer compact context bundles; use full context only when compact context is insufficient.
 - Show task IDs, business meaning, status, dependency state, evidence state, and recommended next action when there are choices.
 - Ask you only when the answer affects product behavior, architecture, data, cost, security, or deployment.
 - Update task cards and handoff notes as work progresses.
@@ -65,6 +66,14 @@ Only say the part that requires human judgment:
 ## Evidence Without Extra Work
 
 You do not need to paste fixed status commands during normal Codex use. Codex should keep task cards and `.ai-team/state/runs.json` updated so "continue" can see the latest task result, verification state, and blocker reason.
+
+For low-token handoffs, use:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Get-AiTeamContext.ps1 -TaskId <task-id>
+```
+
+Use `-Mode standard` or `-Full` only when the compact bundle is not enough.
 
 ## Optional Fallback
 

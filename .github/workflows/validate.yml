@@ -118,6 +118,9 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Sync-AiTeamState.ps1")
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
 
           $state = Get-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Raw -Encoding UTF8 | ConvertFrom-Json
           $demo1 = $state.tasks | Where-Object { $_.task_id -eq "demo-001" } | Select-Object -First 1
