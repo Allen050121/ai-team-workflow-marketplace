@@ -51,6 +51,30 @@ function Test-PowerShellSyntax {
     }
 }
 
+function Test-CommandRiskClassifier {
+    $classifierPath = Join-Path $aiTeamRoot "scripts\Test-AiTeamCommand.ps1"
+    if (-not (Test-Path -LiteralPath $classifierPath)) { return }
+
+    $cases = @(
+        @{ command = "git status --short"; expected = "safe" },
+        @{ command = "npm install left-pad"; expected = "approval_required" },
+        @{ command = "git commit --no-verify"; expected = "forbidden" },
+        @{ command = "unknown-tool --flag"; expected = "approval_required" }
+    )
+
+    foreach ($case in $cases) {
+        try {
+            $result = powershell -NoProfile -ExecutionPolicy Bypass -File $classifierPath -Command $case.command -Json | ConvertFrom-Json
+            if ($result.risk -ne $case.expected) {
+                Add-CheckError "Command risk classifier expected '$($case.command)' to be $($case.expected), got $($result.risk)."
+            }
+        }
+        catch {
+            Add-CheckError "Command risk classifier failed for '$($case.command)': $($_.Exception.Message)"
+        }
+    }
+}
+
 Write-Host "AI Team project health check"
 Write-Host "Project: $ProjectRoot"
 Write-Host ""
@@ -102,6 +126,7 @@ if (Test-Path -LiteralPath $taskTemplatePath) {
 
 Test-PowerShellSyntax "scripts"
 Test-PowerShellSyntax "hooks"
+Test-CommandRiskClassifier
 
 if (-not $SkipSync) {
     $syncScript = Join-Path $aiTeamRoot "scripts\Sync-AiTeamState.ps1"
@@ -144,4 +169,4 @@ if ($errors.Count -gt 0) {
 }
 
 Write-Host "Result: passed"
-Write-Host "Checked structure, JSON, PowerShell syntax, sync, status, and compact context."
+Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, sync, status, and compact context."
