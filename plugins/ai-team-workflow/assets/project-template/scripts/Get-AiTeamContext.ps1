@@ -56,6 +56,55 @@ function Show-Section {
     Show-File $Label $Path $CompactTail
 }
 
+function Get-MarkdownSection {
+    param(
+        [string]$Content,
+        [string]$Heading
+    )
+
+    $pattern = "(?s)## " + [regex]::Escape($Heading) + "\s+(.+?)(\r?\n## |\z)"
+    if ($Content -match $pattern) {
+        return $Matches[1].Trim()
+    }
+
+    return ""
+}
+
+function Show-TaskCardSummary {
+    param(
+        [string]$TaskId,
+        [string]$Path
+    )
+
+    Write-Host ""
+    Write-Host "===== Task: $TaskId ====="
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        Write-Host "Missing: $Path"
+        return
+    }
+
+    if ($Full -or $Mode -eq "full") {
+        Get-Content -LiteralPath $Path -Encoding UTF8
+        return
+    }
+
+    if ($Mode -eq "standard") {
+        Show-File "Task: $TaskId" $Path 220
+        return
+    }
+
+    $content = Get-Content -LiteralPath $Path -Encoding UTF8 -Raw
+    foreach ($heading in @("Status", "Goal", "Non-Goals", "File Boundaries", "Verification")) {
+        $section = Get-MarkdownSection $content $heading
+        if ($section) {
+            Write-Host ""
+            Write-Host "## $heading"
+            Write-Host $section
+        }
+    }
+}
+
 function Show-RunSummary {
     param(
         [string]$TaskId,
@@ -183,7 +232,7 @@ Show-Section "Command Policy" (Join-Path $ProjectRoot ".ai-team\policies\command
 
 if ($TaskId) {
     $taskPath = Join-Path $ProjectRoot ".ai-team\tasks\$TaskId.md"
-    Show-Section "Task: $TaskId" $taskPath 140 220
+    Show-TaskCardSummary $TaskId $taskPath
     Show-TaskStateSummary $TaskId (Join-Path $ProjectRoot ".ai-team\state\tasks.json")
     Show-RunSummary $TaskId (Join-Path $ProjectRoot ".ai-team\state\runs.json") $MaxRuns
 }
