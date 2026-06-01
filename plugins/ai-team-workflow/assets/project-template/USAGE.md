@@ -36,7 +36,7 @@ Move toward release:
 继续到部署前检查，不要真正部署生产环境。
 ```
 
-Codex should inspect `.ai-team/tasks/`, infer the next step, and avoid asking you to run fixed commands.
+Codex should inspect `.ai-team/tasks/`, `.ai-team/state/tasks.json`, and `.ai-team/state/runs.json`, infer the next step, and avoid asking you to run fixed commands.
 
 ## What Codex Should Do
 
@@ -48,7 +48,7 @@ Codex should automatically:
 - Route your natural-language request to Dispatcher, Executor, Reviewer, Integration, or Memory Curator.
 - Use `.ai-team/policies/command-policy.md` before risky commands.
 - Record compact execution and review evidence in `.ai-team/state/runs.json`.
-- Show task IDs, business meaning, status, dependency state, and recommended next action when there are choices.
+- Show task IDs, business meaning, status, dependency state, evidence state, and recommended next action when there are choices.
 - Ask you only when the answer affects product behavior, architecture, data, cost, security, or deployment.
 - Update task cards and handoff notes as work progresses.
 
