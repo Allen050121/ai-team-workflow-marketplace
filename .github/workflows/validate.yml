@@ -155,10 +155,10 @@ jobs:
 
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $tmp "ai-team/Update-AiTeamProject.ps1") -ProjectPath $project -CodexHome $tmp
 
-          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/memory/project-brief.md") -Raw -Encoding UTF8) -ne "CUSTOM PROJECT BRIEF") {
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/memory/project-brief.md") -Raw -Encoding UTF8).Trim() -ne "CUSTOM PROJECT BRIEF") {
             throw "Project memory was overwritten during update."
           }
-          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/custom-task.md") -Raw -Encoding UTF8) -ne "CUSTOM TASK CARD") {
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/custom-task.md") -Raw -Encoding UTF8).Trim() -ne "CUSTOM TASK CARD") {
             throw "Project task card was overwritten during update."
           }
           if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Raw -Encoding UTF8) -notmatch '"custom"') {
