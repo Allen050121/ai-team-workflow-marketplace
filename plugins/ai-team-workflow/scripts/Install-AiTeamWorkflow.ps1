@@ -32,5 +32,10 @@ if (Test-Path -LiteralPath $pluginInit) {
     Copy-Item -LiteralPath $pluginInit -Destination (Join-Path $Target "Initialize-AiTeamProject.ps1") -Force
 }
 
+$pluginUpdate = Join-Path $Assets "Update-AiTeamProject.ps1"
+if (Test-Path -LiteralPath $pluginUpdate) {
+    Copy-Item -LiteralPath $pluginUpdate -Destination (Join-Path $Target "Update-AiTeamProject.ps1") -Force
+}
+
 Write-Host "AI Team Workflow installed to: $Target"
 Write-Host "Global Codex rules updated: $(Join-Path $CodexHome 'AGENTS.md')"

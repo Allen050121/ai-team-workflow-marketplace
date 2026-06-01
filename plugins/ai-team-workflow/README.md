@@ -31,6 +31,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-AiTeamWorkfl
 powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Initialize-AiTeamProject.ps1"
 ```
 
+## Update An Existing Project
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Update-AiTeamProject.ps1"
+```
+
+This updates workflow-managed files such as scripts, prompts, checklists, policies, hooks, and templates. It preserves project memory, task cards, task state, repo map, and commands.
+
 ## Normal Codex Use
 
 Say the real product work:

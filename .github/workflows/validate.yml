@@ -132,3 +132,39 @@ jobs:
           if ($demo1.verification_status -ne "passed") { throw "demo-001 verification did not sync" }
           if ($demo2.verification_status -ne "failed") { throw "demo-002 verification did not sync" }
           if ($demo2.blocked_reason -ne "Missing test fixture") { throw "demo-002 blocker did not sync" }
+
+      - name: Simulate safe project update
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $tmp = Join-Path $env:TEMP ("ai-team-update-ci-" + [guid]::NewGuid().ToString("N"))
+          New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+
+          powershell -NoProfile -ExecutionPolicy Bypass -File "plugins/ai-team-workflow/scripts/Install-AiTeamWorkflow.ps1" -CodexHome $tmp -Force
+
+          $project = Join-Path $tmp "project"
+          New-Item -ItemType Directory -Force -Path $project | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $tmp "ai-team/Initialize-AiTeamProject.ps1") -ProjectPath $project -CodexHome $tmp
+
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/memory/project-brief.md") -Encoding UTF8 -Value "CUSTOM PROJECT BRIEF"
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/tasks/custom-task.md") -Encoding UTF8 -Value "CUSTOM TASK CARD"
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Encoding UTF8 -Value '{"version":1,"tasks":[{"task_id":"custom"}]}'
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/commands.json") -Encoding UTF8 -Value '{"custom":true}'
+
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $tmp "ai-team/Update-AiTeamProject.ps1") -ProjectPath $project -CodexHome $tmp
+
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/memory/project-brief.md") -Raw -Encoding UTF8) -ne "CUSTOM PROJECT BRIEF") {
+            throw "Project memory was overwritten during update."
+          }
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/custom-task.md") -Raw -Encoding UTF8) -ne "CUSTOM TASK CARD") {
+            throw "Project task card was overwritten during update."
+          }
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Raw -Encoding UTF8) -notmatch '"custom"') {
+            throw "Project task state was overwritten during update."
+          }
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/commands.json") -Raw -Encoding UTF8) -notmatch '"custom"') {
+            throw "Project commands were overwritten during update."
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $project ".ai-team/policies/command-policy.md"))) {
+            throw "Workflow policy was not updated."
+          }

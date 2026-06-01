@@ -1,10 +1,11 @@
 ﻿param(
     [string]$ProjectPath = (Get-Location).Path,
+    [string]$CodexHome = (Join-Path $env:USERPROFILE ".codex"),
     [switch]$Force
 )
 
 $ErrorActionPreference = "Stop"
-$TemplateRoot = Join-Path $env:USERPROFILE ".codex\ai-team\project-template"
+$TemplateRoot = Join-Path $CodexHome "ai-team\project-template"
 $ProjectPath = (Resolve-Path $ProjectPath).Path
 $Target = Join-Path $ProjectPath ".ai-team"
 

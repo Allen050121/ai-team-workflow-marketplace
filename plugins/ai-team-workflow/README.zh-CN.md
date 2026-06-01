@@ -31,6 +31,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-AiTeamWorkfl
 powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Initialize-AiTeamProject.ps1"
 ```
 
+## 更新已有项目
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Update-AiTeamProject.ps1"
+```
+
+它只更新工作流管理的文件，例如 scripts、prompts、checklists、policies、hooks 和模板文件。项目记忆、任务卡、任务状态、repo map 和 commands 会被保留。
+
 ## Codex 日常使用
 
 直接说真实需求：

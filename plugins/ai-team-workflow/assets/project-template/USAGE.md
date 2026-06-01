@@ -84,3 +84,13 @@ Use `.ai.cmd` only if Codex is not reading the project files or if you are in a 
 ```
 
 This fallback copies the workflow context to your clipboard.
+
+## Updating Existing Projects
+
+After reinstalling the plugin, update an existing project with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Update-AiTeamProject.ps1"
+```
+
+This preserves project facts and product work: `.ai-team/memory/`, real task cards, `.ai-team/state/`, `.ai-team/index/`, and `.ai-team/commands.json`.
