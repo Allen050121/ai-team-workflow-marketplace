@@ -23,7 +23,8 @@ Your job:
 - Add only durable lessons that will help future tasks.
 - Compress lessons into trigger-based rules.
 - Remove or merge duplicate memory.
-- Avoid raw chat logs, noisy details, and one-off observations.
+- Avoid raw chat logs, run ledgers, noisy details, and one-off observations.
+- Use `.ai-team/state/runs.json` only as evidence for deciding whether a lesson is durable.
 
 Write to pitfalls.md when:
 - A mistake happened or nearly happened.

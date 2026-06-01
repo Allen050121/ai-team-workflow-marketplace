@@ -1,10 +1,15 @@
 param(
     [string]$TaskId,
-    [switch]$Full
+    [switch]$Full,
+    [ValidateSet("compact", "standard", "full")]
+    [string]$Mode = "compact"
 )
 
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+if ($Full) {
+    $Mode = "full"
+}
 
 function Show-File {
     param(
@@ -21,7 +26,7 @@ function Show-File {
         return
     }
 
-    if ($Tail -gt 0 -and -not $Full) {
+    if ($Tail -gt 0 -and -not $Full -and $Mode -ne "full") {
         Get-Content -LiteralPath $Path -Encoding UTF8 -Tail $Tail
     }
     else {
@@ -29,18 +34,46 @@ function Show-File {
     }
 }
 
+function Show-Section {
+    param(
+        [string]$Label,
+        [string]$Path,
+        [int]$CompactTail,
+        [int]$StandardTail = 0
+    )
+
+    if ($Full -or $Mode -eq "full") {
+        Show-File $Label $Path
+        return
+    }
+
+    if ($Mode -eq "standard" -and $StandardTail -gt 0) {
+        Show-File $Label $Path $StandardTail
+        return
+    }
+
+    Show-File $Label $Path $CompactTail
+}
+
 Write-Host "AI Team context bundle"
 Write-Host "Project root: $ProjectRoot"
+Write-Host "Mode: $Mode"
+Write-Host "Tip: use -Mode standard for more context or -Full for complete files."
 
-Show-File "Project Brief" (Join-Path $ProjectRoot ".ai-team\memory\project-brief.md")
-Show-File "Human Lead" (Join-Path $ProjectRoot ".ai-team\memory\human-lead.md")
-Show-File "Technology Policy" (Join-Path $ProjectRoot ".ai-team\memory\technology-policy.md")
-Show-File "Pitfalls" (Join-Path $ProjectRoot ".ai-team\memory\pitfalls.md") 120
-Show-File "Patterns" (Join-Path $ProjectRoot ".ai-team\memory\patterns.md") 120
+Show-Section "Project Brief" (Join-Path $ProjectRoot ".ai-team\memory\project-brief.md") 80 160
+Show-Section "Human Lead" (Join-Path $ProjectRoot ".ai-team\memory\human-lead.md") 60 120
+Show-Section "Production Mode" (Join-Path $ProjectRoot ".ai-team\memory\production-mode.md") 80 160
+Show-Section "Technology Policy" (Join-Path $ProjectRoot ".ai-team\memory\technology-policy.md") 80 160
+Show-Section "Repo Map" (Join-Path $ProjectRoot ".ai-team\index\repo-map.md") 80 160
+Show-Section "Pitfalls" (Join-Path $ProjectRoot ".ai-team\memory\pitfalls.md") 80 160
+Show-Section "Patterns" (Join-Path $ProjectRoot ".ai-team\memory\patterns.md") 80 160
+Show-Section "Command Policy" (Join-Path $ProjectRoot ".ai-team\policies\command-policy.md") 80 120
 
 if ($TaskId) {
     $taskPath = Join-Path $ProjectRoot ".ai-team\tasks\$TaskId.md"
-    Show-File "Task: $TaskId" $taskPath
+    Show-Section "Task: $TaskId" $taskPath 140 220
+    Show-Section "Task State" (Join-Path $ProjectRoot ".ai-team\state\tasks.json") 120 200
+    Show-Section "Recent Run Evidence" (Join-Path $ProjectRoot ".ai-team\state\runs.json") 120 220
 }
 else {
     Write-Host ""
@@ -50,8 +83,14 @@ else {
 Write-Host ""
 Write-Host "===== Git Status ====="
 try {
-    git -C $ProjectRoot status --short
+    $gitRoot = git -C $ProjectRoot rev-parse --show-toplevel 2>$null
+    if ($LASTEXITCODE -ne 0 -or -not $gitRoot) {
+        Write-Host "Git status unavailable. This directory may not be a git repository yet."
+    }
+    else {
+        git -C $ProjectRoot status --short
+    }
 }
 catch {
-    Write-Host "Git status unavailable: $($_.Exception.Message)"
+    Write-Host "Git status unavailable. This directory may not be a git repository yet."
 }

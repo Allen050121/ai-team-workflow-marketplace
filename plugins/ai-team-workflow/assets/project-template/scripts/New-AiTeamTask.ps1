@@ -13,6 +13,11 @@ param(
     [ValidateSet("serial", "parallel")]
     [string]$Mode = "serial",
 
+    [ValidateSet("Prototype", "MVP", "Production")]
+    [string]$WorkMode = "MVP",
+
+    [string[]]$Dependencies = @(),
+
     [string[]]$AllowedFiles = @(),
 
     [switch]$Force
@@ -49,7 +54,9 @@ $content = $content.Replace("{{TASK_ID}}", $Id)
 $content = $content.Replace("{{STATUS}}", $Status)
 $content = $content.Replace("{{OWNER}}", $Owner)
 $content = $content.Replace("{{MODE}}", $Mode)
+$content = $content.Replace("{{WORK_MODE}}", $WorkMode)
 $content = $content.Replace("{{DATE}}", (Get-Date -Format "yyyy-MM-dd"))
+$content = $content.Replace("dependencies:", ("dependencies: " + (($Dependencies | ForEach-Object { $_.Trim() } | Where-Object { $_ }) -join ", ")))
 $content = $content.Replace("{{ALLOWED_FILES}}", $allowed)
 
 Set-Content -LiteralPath $taskPath -Encoding UTF8 -Value $content

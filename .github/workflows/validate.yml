@@ -1,0 +1,174 @@
+name: Validate AI Team Workflow
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "codex/**"
+
+jobs:
+  validate:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $jsonFiles = @(
+            "marketplace.json",
+            "plugins/ai-team-workflow/.codex-plugin/plugin.json",
+            "plugins/ai-team-workflow/assets/project-template/config.json",
+            "plugins/ai-team-workflow/assets/project-template/commands.json",
+            "plugins/ai-team-workflow/assets/project-template/state/tasks.json",
+            "plugins/ai-team-workflow/assets/project-template/state/runs.json"
+          )
+          foreach ($file in $jsonFiles) {
+            Get-Content -LiteralPath $file -Raw -Encoding UTF8 | ConvertFrom-Json | Out-Null
+          }
+
+      - name: Validate plugin manifest contract
+        shell: python
+        run: |
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path("plugins/ai-team-workflow")
+          manifest_path = root / ".codex-plugin" / "plugin.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          allowed = {
+              "id", "name", "version", "description", "skills", "apps",
+              "mcpServers", "interface", "author", "homepage", "repository",
+              "license", "keywords",
+          }
+          extra = sorted(set(manifest) - allowed)
+          if extra:
+              raise SystemExit(f"Unsupported plugin fields: {extra}")
+
+          semver = re.compile(
+              r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+              r"(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
+          )
+          required_strings = ["name", "version", "description", "skills"]
+          for key in required_strings:
+              if not isinstance(manifest.get(key), str) or not manifest[key].strip():
+                  raise SystemExit(f"plugin.json field {key!r} must be a non-empty string")
+          if not semver.fullmatch(manifest["version"]):
+              raise SystemExit("plugin.json version must be semver")
+          if manifest["skills"].rstrip("/\\") != "./skills":
+              raise SystemExit("plugin.json skills must point to ./skills/")
+
+          interface = manifest.get("interface")
+          if not isinstance(interface, dict):
+              raise SystemExit("plugin.json interface must be an object")
+          for key in ["displayName", "shortDescription", "longDescription", "developerName", "category"]:
+              if not isinstance(interface.get(key), str) or not interface[key].strip():
+                  raise SystemExit(f"interface.{key} must be a non-empty string")
+          if not interface.get("defaultPrompt") and not interface.get("default_prompt"):
+              raise SystemExit("interface.defaultPrompt is required")
+          capabilities = interface.get("capabilities")
+          if not isinstance(capabilities, list) or not all(isinstance(item, str) and item.strip() for item in capabilities):
+              raise SystemExit("interface.capabilities must be a non-empty string list")
+
+      - name: Validate PowerShell scripts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $scripts = Get-ChildItem -LiteralPath "plugins/ai-team-workflow/assets/project-template/scripts" -Filter "*.ps1"
+          foreach ($script in $scripts) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($script.FullName, [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors -and $errors.Count -gt 0) {
+              $errors | Format-List | Out-String | Write-Error
+            }
+          }
+
+      - name: Simulate template install and task evidence flow
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $tmp = Join-Path $env:TEMP ("ai-team-ci-" + [guid]::NewGuid().ToString("N"))
+          New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+
+          powershell -NoProfile -ExecutionPolicy Bypass -File "plugins/ai-team-workflow/scripts/Install-AiTeamWorkflow.ps1" -CodexHome $tmp -Force
+          $template = Join-Path $tmp "ai-team/project-template"
+          foreach ($file in @(
+            "state/runs.json",
+            "memory/production-mode.md",
+            "policies/command-policy.md",
+            "checklists/release-gate.md",
+            "scripts/Test-AiTeamProject.ps1",
+            "scripts/Update-AiTeamRun.ps1"
+          )) {
+            if (-not (Test-Path -LiteralPath (Join-Path $template $file))) {
+              throw "Missing installed template file: $file"
+            }
+          }
+
+          $project = Join-Path $tmp "project"
+          New-Item -ItemType Directory -Force -Path $project | Out-Null
+          Copy-Item -LiteralPath $template -Destination (Join-Path $project ".ai-team") -Recurse
+
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -AllowedFiles "src/**"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Sync-AiTeamState.ps1")
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamProject.ps1") | Out-Null
+          $statusOutput = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamStatus.ps1")
+          if (($statusOutput -join "`n") -notmatch "fix: demo-002") {
+            throw "Expected failed demo-002 to be recommended for fix."
+          }
+
+          $state = Get-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Raw -Encoding UTF8 | ConvertFrom-Json
+          $demo1 = $state.tasks | Where-Object { $_.task_id -eq "demo-001" } | Select-Object -First 1
+          $demo2 = $state.tasks | Where-Object { $_.task_id -eq "demo-002" } | Select-Object -First 1
+          if ($demo1.verification_status -ne "passed") { throw "demo-001 verification did not sync" }
+          if ($demo1.work_mode -ne "Production") { throw "demo-001 work mode did not sync" }
+          if ($demo2.verification_status -ne "failed") { throw "demo-002 verification did not sync" }
+          if ($demo2.blocked_reason -ne "Missing test fixture") { throw "demo-002 blocker did not sync" }
+
+      - name: Simulate safe project update
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $tmp = Join-Path $env:TEMP ("ai-team-update-ci-" + [guid]::NewGuid().ToString("N"))
+          New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+
+          powershell -NoProfile -ExecutionPolicy Bypass -File "plugins/ai-team-workflow/scripts/Install-AiTeamWorkflow.ps1" -CodexHome $tmp -Force
+
+          $project = Join-Path $tmp "project"
+          New-Item -ItemType Directory -Force -Path $project | Out-Null
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $tmp "ai-team/Initialize-AiTeamProject.ps1") -ProjectPath $project -CodexHome $tmp
+
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/memory/project-brief.md") -Encoding UTF8 -Value "CUSTOM PROJECT BRIEF"
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/tasks/custom-task.md") -Encoding UTF8 -Value "CUSTOM TASK CARD"
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Encoding UTF8 -Value '{"version":1,"tasks":[{"task_id":"custom"}]}'
+          Set-Content -LiteralPath (Join-Path $project ".ai-team/commands.json") -Encoding UTF8 -Value '{"custom":true}'
+
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $tmp "ai-team/Update-AiTeamProject.ps1") -ProjectPath $project -CodexHome $tmp
+
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/memory/project-brief.md") -Raw -Encoding UTF8).Trim() -ne "CUSTOM PROJECT BRIEF") {
+            throw "Project memory was overwritten during update."
+          }
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/custom-task.md") -Raw -Encoding UTF8).Trim() -ne "CUSTOM TASK CARD") {
+            throw "Project task card was overwritten during update."
+          }
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/state/tasks.json") -Raw -Encoding UTF8) -notmatch '"custom"') {
+            throw "Project task state was overwritten during update."
+          }
+          if ((Get-Content -LiteralPath (Join-Path $project ".ai-team/commands.json") -Raw -Encoding UTF8) -notmatch '"custom"') {
+            throw "Project commands were overwritten during update."
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $project ".ai-team/policies/command-policy.md"))) {
+            throw "Workflow policy was not updated."
+          }

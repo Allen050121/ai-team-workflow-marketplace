@@ -18,3 +18,4 @@ Use when a task touches auth, permissions, user data, secrets, dependencies, dep
 - [ ] New dependencies are justified and checked with the project security command when available.
 - [ ] Logs and errors do not expose sensitive data.
 - [ ] External services, paid services, or production actions were approved by the Human Lead.
+- [ ] Approval-required commands followed `.ai-team/policies/command-policy.md`.

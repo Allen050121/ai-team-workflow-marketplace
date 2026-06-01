@@ -15,7 +15,7 @@ Use Codex as the main AI team interface.
 In Codex chat, say the real work:
 
 ```text
-我要做一个产品：个人待办清单 Web App。MVP 包含登录、任务列表、部署到 Vercel。遇到关键选择先问我。
+我要做一个产品：个人待办清单 Web App，MVP 包含登录、任务列表、部署到 Vercel。遇到关键选择先问我。
 ```
 
 Then continue with:
@@ -37,9 +37,11 @@ Codex should:
 - Read `AGENTS.md`.
 - Respect `.ai-team/memory/human-lead.md`.
 - Inspect `.ai-team/tasks/` before deciding the next action.
+- Use `.ai-team/state/tasks.json` and `.ai-team/state/runs.json` to understand current task evidence.
 - Use `.ai-team/memory/` for project context and lessons.
 - Use `.ai-team/prompts/` internally for the right role.
 - Use `.ai-team/checklists/` as gates.
+- Use `.ai-team/policies/command-policy.md` before risky commands.
 - Ask questions only at clarification or approval boundaries.
 
 ## User Responsibilities

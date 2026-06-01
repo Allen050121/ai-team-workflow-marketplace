@@ -28,6 +28,7 @@ Always load:
 - `.ai-team/memory/project-brief.md`
 - `.ai-team/memory/pitfalls.md`
 - `.ai-team/memory/patterns.md`
+- `.ai-team/policies/command-policy.md`
 
 Then load the routed role prompt:
 
@@ -35,7 +36,7 @@ Then load the routed role prompt:
 - Executor: `.ai-team/prompts/executor.md`
 - Reviewer: `.ai-team/prompts/reviewer-verifier.md`
 - Memory Curator: `.ai-team/prompts/memory-curator.md`
-- Integration: `.ai-team/checklists/integration-gate.md`
+- Integration: `.ai-team/checklists/integration-gate.md` and `.ai-team/checklists/release-gate.md` when deployment or publishing is involved
 
 ## User Experience Rule
 

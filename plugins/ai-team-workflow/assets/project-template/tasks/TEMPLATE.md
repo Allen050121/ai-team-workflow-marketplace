@@ -4,7 +4,13 @@ task_id: "{{TASK_ID}}"
 status: "{{STATUS}}"
 owner: "{{OWNER}}"
 mode: "{{MODE}}"
+work_mode: "{{WORK_MODE}}"
 created: "{{DATE}}"
+dependencies:
+verification_status: not_run
+last_run_id:
+last_result:
+blocked_reason:
 branch:
 github_issue:
 github_pr:
@@ -21,6 +27,12 @@ tags:
 - Owner: `{{OWNER}}`
 - Status: `{{STATUS}}`
 - Mode: `{{MODE}}`
+- Work Mode: `{{WORK_MODE}}`
+- Dependencies:
+- Verification Status: `not_run`
+- Last Run:
+- Last Result:
+- Blocked Reason:
 - Branch:
 - GitHub Issue:
 - GitHub PR:
@@ -48,10 +60,12 @@ List what this task must not change.
 ## Context To Read
 
 - `.ai-team/memory/project-brief.md`
+- `.ai-team/memory/production-mode.md`
 - `.ai-team/memory/technology-policy.md`
 - `.ai-team/memory/pitfalls.md`
 - `.ai-team/memory/patterns.md`
 - `.ai-team/commands.json`
+- `.ai-team/policies/command-policy.md`
 - Related source files listed above.
 
 ## Implementation Notes
@@ -61,6 +75,7 @@ List what this task must not change.
 - If boundaries are wrong, stop and update this card before editing.
 - Create or use a task branch when code changes are required.
 - Keep GitHub issue/PR fields updated when GitHub is used for the project.
+- Record execution or review evidence in `.ai-team/state/runs.json`.
 
 ## Acceptance Criteria
 
@@ -71,6 +86,7 @@ List what this task must not change.
 - [ ] Verification command was run or explicitly waived with a reason.
 - [ ] Security-sensitive changes passed `.ai-team/checklists/security-gate.md`.
 - [ ] PR/CI status is recorded when GitHub is used.
+- [ ] Run evidence was recorded in `.ai-team/state/runs.json`.
 
 ## Verification
 
@@ -83,5 +99,6 @@ git status --short
 
 - Changed files:
 - Verification result:
+- Run evidence:
 - Known follow-ups:
 - Memory updates needed:

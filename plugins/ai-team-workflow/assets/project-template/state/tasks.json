@@ -5,6 +5,7 @@
   "notes": [
     "This file is tool-readable task state.",
     "Markdown task cards remain the human-readable source of task details.",
-    "Run .ai-team/scripts/Sync-AiTeamState.ps1 after creating or updating task cards."
+    "Run .ai-team/scripts/Sync-AiTeamState.ps1 after creating or updating task cards.",
+    "Keep execution evidence in .ai-team/state/runs.json instead of chat history."
   ]
 }
