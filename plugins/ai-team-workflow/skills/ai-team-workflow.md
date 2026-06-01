@@ -13,6 +13,7 @@ Use this skill when the user wants a stable Codex-first AI development team work
 - Project-specific facts and task cards live in the current project's `.ai-team` directory.
 - The user is the Human Lead: they provide product intent and approve high-impact choices; Codex routes, inspects, executes, reviews, and updates task cards.
 - GitHub support is lightweight by default: task cards can record branch, issue, PR, and CI status; PR/security gates enforce production basics without requiring GitHub Projects.
+- Repo map and structured task state help Codex continue reliably without rediscovering the project every turn.
 
 ## Install Or Sync Global Template
 

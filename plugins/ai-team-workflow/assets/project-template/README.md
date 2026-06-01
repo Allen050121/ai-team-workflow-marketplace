@@ -114,3 +114,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/hooks/ai-team-hook.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.
 - `.ai-team/commands.json`: project verification commands used by Reviewer/Verifier.
 - `.ai-team/github/`: lightweight issue and PR templates for GitHub-backed projects.
+- `.ai-team/index/repo-map.md`: compact codebase map to reduce repeated exploration.
+- `.ai-team/state/tasks.json`: tool-readable task state synced from task cards.

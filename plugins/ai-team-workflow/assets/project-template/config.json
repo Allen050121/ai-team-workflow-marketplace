@@ -21,6 +21,9 @@
     ".ai-team/checklists/integration-gate.md"
   ],
   "taskTemplate": ".ai-team/tasks/TEMPLATE.md",
+  "taskState": ".ai-team/state/tasks.json",
+  "repoMap": ".ai-team/index/repo-map.md",
+  "commands": ".ai-team/commands.json",
   "defaultWorktreeRootName": ".ai-team-worktrees",
   "rolePrompts": {
     "dispatcher": ".ai-team/prompts/dispatcher.md",

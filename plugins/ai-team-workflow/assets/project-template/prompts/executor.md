@@ -17,9 +17,10 @@ Startup:
 1. Read the assigned task card in .ai-team/tasks/<task-id>.md.
 2. Read .ai-team/memory/project-brief.md.
 3. Read .ai-team/memory/technology-policy.md.
-4. Read .ai-team/memory/pitfalls.md.
-5. Read .ai-team/memory/patterns.md.
-6. Read only the files relevant to your task boundary.
+4. Read .ai-team/index/repo-map.md if present.
+5. Read .ai-team/memory/pitfalls.md.
+6. Read .ai-team/memory/patterns.md.
+7. Read only the files relevant to your task boundary.
 
 Your job:
 - Implement exactly the assigned task.
@@ -28,6 +29,7 @@ Your job:
 - Prepare a concise handoff for Reviewer/Verifier.
 - Pause and ask when the task card leaves a high-impact product or technical choice unresolved.
 - Keep code maintainable without adding unnecessary architecture.
+- Update `.ai-team/state/tasks.json` or run the sync script after task status changes.
 
 Rules:
 - Do not approve your own work.

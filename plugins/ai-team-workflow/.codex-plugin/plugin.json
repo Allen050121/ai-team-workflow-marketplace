@@ -1,8 +1,8 @@
 {
-  "version": "0.1.1+codex.20260601011539",
+  "version": "0.2.0+codex.20260601012629",
   "name": "ai-team-workflow",
   "skills": "./skills/",
-  "description": "Codex-first AI Team workflow with global templates, Human Lead profile, project task cards, quality gates, and lightweight GitHub gates.",
+  "description": "Codex-first AI Team workflow with global templates, Human Lead profile, task state, repo map, quality gates, and lightweight GitHub gates.",
   "author": {
     "name": "Local developer"
   },
@@ -13,9 +13,11 @@
       "Workflow templates",
       "Task orchestration",
       "Quality gates",
-      "GitHub gates"
+      "GitHub gates",
+      "Repo map",
+      "Task state"
     ],
-    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, task cards, natural-language routing, scale-aware quality gates, and lightweight GitHub PR/CI/security gates.",
+    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, task cards, structured task state, repo maps, natural-language routing, scale-aware quality gates, and lightweight GitHub PR/CI/security gates.",
     "shortDescription": "Codex-first AI team workflow and project template.",
     "defaultPrompt": "Set up or use the AI Team Workflow for this project.",
     "category": "Productivity"
