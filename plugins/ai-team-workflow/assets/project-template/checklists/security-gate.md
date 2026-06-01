@@ -19,3 +19,4 @@ Use when a task touches auth, permissions, user data, secrets, dependencies, dep
 - [ ] Logs and errors do not expose sensitive data.
 - [ ] External services, paid services, or production actions were approved by the Human Lead.
 - [ ] Approval-required commands followed `.ai-team/policies/command-policy.md`.
+- [ ] Command risk classification evidence is recorded for dependency, data, deployment, secret, or external-service commands.

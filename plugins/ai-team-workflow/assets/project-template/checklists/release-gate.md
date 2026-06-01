@@ -16,6 +16,7 @@ Also use when `.ai-team/memory/production-mode.md` triggers Production mode.
 
 - [ ] Human Lead approved the release or production-facing action.
 - [ ] Production Mode triggers were checked and documented in the task card or handoff.
+- [ ] Deployment, publishing, cloud, database, or git push commands were classified and approval evidence is recorded.
 - [ ] Build and required project checks passed.
 - [ ] Required environment variables are documented with safe placeholders.
 - [ ] No real secrets, tokens, cookies, or private keys are committed.

@@ -61,6 +61,7 @@ Output:
 - Result: pass / request changes / blocked.
 - Findings with file references.
 - Verification commands and results.
+- Command risk classifications and approval evidence.
 - Required fixes.
 - Memory updates needed.
 ```

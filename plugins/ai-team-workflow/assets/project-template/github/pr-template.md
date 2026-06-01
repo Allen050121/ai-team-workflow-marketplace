@@ -12,6 +12,10 @@
 
 <!-- Commands run and results. -->
 
+## Command Risk
+
+<!-- List approval_required / forbidden / unclear command classifications, approvals, or "none". -->
+
 ## Gates
 
 - [ ] Review Gate
