@@ -20,6 +20,7 @@
 - `.ai-team/state/runs.json` 运行证据账本，执行和审核结果不会散落在聊天记录里。
 - 命令安全策略，用于依赖安装、数据操作、部署、git push 和外部服务动作。
 - 轻量命令风险分类器，用于判断 `safe`、`approval_required`、`forbidden`。
+- Diff 边界检查器：自动对比实际改动文件和任务卡的 `Allowed To Modify` 边界。
 - 发布门禁，用于部署、回滚、烟测和生产审批检查。
 
 ## 安装全局模板

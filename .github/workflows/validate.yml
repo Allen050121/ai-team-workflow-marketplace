@@ -108,6 +108,7 @@ jobs:
             "scripts/Test-AiTeamCommand.ps1",
             "scripts/Get-AiTeamIntake.ps1",
             "scripts/Test-AiTeamProject.ps1",
+            "scripts/Test-AiTeamDiffBoundary.ps1",
             "scripts/Update-AiTeamRun.ps1"
           )) {
             if (-not (Test-Path -LiteralPath (Join-Path $template $file))) {
@@ -140,6 +141,34 @@ jobs:
 
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md,docs/notes.md"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -AllowedFiles "src/**"
+          $boundaryProject = Join-Path $tmp "boundary-project"
+          New-Item -ItemType Directory -Force -Path $boundaryProject | Out-Null
+          Copy-Item -LiteralPath $template -Destination (Join-Path $boundaryProject ".ai-team") -Recurse
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $boundaryProject ".ai-team/scripts/New-AiTeamTask.ps1") -Id boundary-001 -Title "Boundary Check" -AllowedFiles "docs/demo.md,docs/notes.md"
+          git -C $boundaryProject init | Out-Null
+          git -C $boundaryProject config user.email "ci@example.com"
+          git -C $boundaryProject config user.name "CI"
+          Set-Content -LiteralPath (Join-Path $boundaryProject "README.md") -Encoding UTF8 -Value "baseline"
+          git -C $boundaryProject add README.md .ai-team/tasks/boundary-001.md
+          git -C $boundaryProject commit -m "baseline" | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $boundaryProject "docs") | Out-Null
+          Set-Content -LiteralPath (Join-Path $boundaryProject "docs/demo.md") -Encoding UTF8 -Value "allowed"
+          $allowedBoundary = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $boundaryProject ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1") -TaskId boundary-001 -BaseRef HEAD -Json | ConvertFrom-Json
+          if ($allowedBoundary.status -ne "passed") { throw "Expected allowed diff boundary to pass." }
+          New-Item -ItemType Directory -Force -Path (Join-Path $boundaryProject "src") | Out-Null
+          Set-Content -LiteralPath (Join-Path $boundaryProject "src/app.ts") -Encoding UTF8 -Value "outside"
+          $boundaryCheck = Start-Process -FilePath "powershell" -ArgumentList @(
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            (Join-Path $boundaryProject ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1"),
+            "-TaskId",
+            "boundary-001",
+            "-BaseRef",
+            "HEAD"
+          ) -Wait -PassThru -NoNewWindow
+          if ($boundaryCheck.ExitCode -eq 0) { throw "Expected out-of-boundary diff to fail." }
           $demo1Card = Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/demo-001.md") -Raw -Encoding UTF8
           $demo2Card = Get-Content -LiteralPath (Join-Path $project ".ai-team/tasks/demo-002.md") -Raw -Encoding UTF8
           if ($demo1Card -notmatch "- docs/demo\.md") { throw "demo-001 allowed files did not render docs/demo.md correctly." }

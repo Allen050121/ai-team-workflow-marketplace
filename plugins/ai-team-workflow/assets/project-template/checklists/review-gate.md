@@ -11,6 +11,7 @@ status: active
 Use after an Executor finishes and before integration.
 
 - [ ] Changed file list matches the task card.
+- [ ] `.ai-team/scripts/Test-AiTeamDiffBoundary.ps1` passed when available, or any boundary change was approved in the task card.
 - [ ] Diff has no unrelated formatting, metadata, or drive-by edits.
 - [ ] Implementation satisfies the task goal.
 - [ ] No recorded pitfall is repeated.

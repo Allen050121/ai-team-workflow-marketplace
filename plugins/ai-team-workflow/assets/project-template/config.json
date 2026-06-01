@@ -32,6 +32,7 @@
   "commands": ".ai-team/commands.json",
   "commandPolicy": ".ai-team/policies/command-policy.md",
   "commandRiskClassifier": ".ai-team/scripts/Test-AiTeamCommand.ps1",
+  "diffBoundaryChecker": ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
   "releaseGate": ".ai-team/checklists/release-gate.md",
   "defaultWorktreeRootName": ".ai-team-worktrees",
   "rolePrompts": {
@@ -53,6 +54,7 @@
     "reviewer": [
       ".ai-team/prompts/reviewer-verifier.md",
       ".ai-team/policies/command-policy.md",
+      ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
       ".ai-team/checklists/review-gate.md",
       ".ai-team/checklists/quality-gate.md",
       ".ai-team/checklists/security-gate.md",

@@ -40,6 +40,16 @@ Write-Host ""
 Write-Host "===== Diff Stat ====="
 git -C $WorktreePath diff --stat $BaseRef
 
+$boundaryScript = Join-Path $ProjectRoot ".ai-team\scripts\Test-AiTeamDiffBoundary.ps1"
+if (Test-Path -LiteralPath $boundaryScript) {
+    Write-Host ""
+    Write-Host "===== Boundary Check ====="
+    powershell -NoProfile -ExecutionPolicy Bypass -File $boundaryScript -TaskId $TaskId -WorktreePath $WorktreePath -BaseRef $BaseRef
+    if ($LASTEXITCODE -ne 0) {
+        throw "Task diff boundary check failed."
+    }
+}
+
 $runsPath = Join-Path $ProjectRoot ".ai-team\state\runs.json"
 if (Test-Path -LiteralPath $runsPath) {
     Write-Host ""

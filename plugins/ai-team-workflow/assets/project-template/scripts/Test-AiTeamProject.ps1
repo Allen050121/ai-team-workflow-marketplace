@@ -173,6 +173,7 @@ $requiredPaths = @(
     "scripts\Get-AiTeamStatus.ps1",
     "scripts\Sync-AiTeamState.ps1",
     "scripts\Test-AiTeamCommand.ps1",
+    "scripts\Test-AiTeamDiffBoundary.ps1",
     "scripts\Update-AiTeamRun.ps1",
     "tasks\TEMPLATE.md",
     "state\runs.json"

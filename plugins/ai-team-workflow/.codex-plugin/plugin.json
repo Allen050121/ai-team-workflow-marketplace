@@ -21,9 +21,10 @@
       "Project intake",
       "Command safety",
       "Command risk classifier",
+      "Diff boundary checker",
       "Release gate"
     ],
-    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, project intake classification, production mode routing, task cards, structured task state, compact run evidence, repo maps, natural-language routing, scale-aware quality gates, command safety policy, command risk classification, release gates, and lightweight GitHub PR/CI/security gates.",
+    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, project intake classification, production mode routing, task cards, diff boundary checks, structured task state, compact run evidence, repo maps, natural-language routing, scale-aware quality gates, command safety policy, command risk classification, release gates, and lightweight GitHub PR/CI/security gates.",
     "shortDescription": "Codex-first AI team workflow and project template.",
     "defaultPrompt": "Set up or use the AI Team Workflow for this project.",
     "category": "Productivity"
