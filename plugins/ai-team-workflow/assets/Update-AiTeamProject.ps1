@@ -72,6 +72,10 @@ if (-not (Test-Path -LiteralPath (Join-Path $Target "state\tasks.json"))) {
     Copy-TemplateItem "state\tasks.json"
 }
 
+if (-not (Test-Path -LiteralPath (Join-Path $Target "memory\production-mode.md"))) {
+    Copy-TemplateItem "memory\production-mode.md"
+}
+
 Write-Host ""
 Write-Host "AI Team project workflow files updated."
 Write-Host "Protected project-local directories: memory, tasks/*.md, state, index, commands.json."

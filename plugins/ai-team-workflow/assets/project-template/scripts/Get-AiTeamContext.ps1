@@ -62,6 +62,7 @@ Write-Host "Tip: use -Mode standard for more context or -Full for complete files
 
 Show-Section "Project Brief" (Join-Path $ProjectRoot ".ai-team\memory\project-brief.md") 80 160
 Show-Section "Human Lead" (Join-Path $ProjectRoot ".ai-team\memory\human-lead.md") 60 120
+Show-Section "Production Mode" (Join-Path $ProjectRoot ".ai-team\memory\production-mode.md") 80 160
 Show-Section "Technology Policy" (Join-Path $ProjectRoot ".ai-team\memory\technology-policy.md") 80 160
 Show-Section "Repo Map" (Join-Path $ProjectRoot ".ai-team\index\repo-map.md") 80 160
 Show-Section "Pitfalls" (Join-Path $ProjectRoot ".ai-team\memory\pitfalls.md") 80 160

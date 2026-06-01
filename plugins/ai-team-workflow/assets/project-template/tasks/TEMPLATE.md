@@ -58,6 +58,7 @@ List what this task must not change.
 ## Context To Read
 
 - `.ai-team/memory/project-brief.md`
+- `.ai-team/memory/production-mode.md`
 - `.ai-team/memory/technology-policy.md`
 - `.ai-team/memory/pitfalls.md`
 - `.ai-team/memory/patterns.md`

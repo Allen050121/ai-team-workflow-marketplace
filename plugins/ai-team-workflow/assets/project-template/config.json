@@ -6,6 +6,7 @@
   "memoryFiles": [
     ".ai-team/memory/human-lead.md",
     ".ai-team/memory/project-brief.md",
+    ".ai-team/memory/production-mode.md",
     ".ai-team/memory/technology-policy.md",
     ".ai-team/memory/pitfalls.md",
     ".ai-team/memory/patterns.md"

@@ -10,9 +10,12 @@ status: active
 
 Use before deployment, release tagging, publishing, or any production-facing external action.
 
+Also use when `.ai-team/memory/production-mode.md` triggers Production mode.
+
 ## Core Release Checks
 
 - [ ] Human Lead approved the release or production-facing action.
+- [ ] Production Mode triggers were checked and documented in the task card or handoff.
 - [ ] Build and required project checks passed.
 - [ ] Required environment variables are documented with safe placeholders.
 - [ ] No real secrets, tokens, cookies, or private keys are committed.

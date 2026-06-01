@@ -63,6 +63,7 @@ $requiredPaths = @(
     "config.json",
     "commands.json",
     "memory\project-brief.md",
+    "memory\production-mode.md",
     "memory\technology-policy.md",
     "memory\pitfalls.md",
     "memory\patterns.md",

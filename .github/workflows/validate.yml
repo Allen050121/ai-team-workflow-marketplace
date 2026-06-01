@@ -100,6 +100,7 @@ jobs:
           $template = Join-Path $tmp "ai-team/project-template"
           foreach ($file in @(
             "state/runs.json",
+            "memory/production-mode.md",
             "policies/command-policy.md",
             "checklists/release-gate.md",
             "scripts/Test-AiTeamProject.ps1",
