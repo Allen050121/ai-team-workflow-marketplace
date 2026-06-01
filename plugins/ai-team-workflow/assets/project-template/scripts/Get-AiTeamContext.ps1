@@ -111,6 +111,62 @@ function Show-RunSummary {
         }
 }
 
+function Show-TaskStateSummary {
+    param(
+        [string]$TaskId,
+        [string]$Path
+    )
+
+    Write-Host ""
+    Write-Host "===== Task State ====="
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        Write-Host "Missing: $Path"
+        return
+    }
+
+    if ($Full -or $Mode -eq "full") {
+        Get-Content -LiteralPath $Path -Encoding UTF8
+        return
+    }
+
+    try {
+        $state = Get-Content -LiteralPath $Path -Encoding UTF8 -Raw | ConvertFrom-Json
+    }
+    catch {
+        Write-Host "Task state exists but could not be parsed: $Path"
+        return
+    }
+
+    if ($state.updatedAt) {
+        Write-Host ("State updated: {0}" -f $state.updatedAt)
+    }
+
+    $task = $null
+    if ($state.tasks) {
+        $task = @($state.tasks | Where-Object { $_.task_id -eq $TaskId } | Select-Object -First 1)
+    }
+
+    if (-not $task) {
+        Write-Host "No task state recorded for task: $TaskId"
+        return
+    }
+
+    Write-Host ("- {0} [{1}] {2}" -f $task.task_id, $task.status, $task.title)
+    if ($task.work_mode) { Write-Host ("  work_mode: {0}" -f $task.work_mode) }
+    if ($task.mode) { Write-Host ("  mode: {0}" -f $task.mode) }
+    if ($task.dependencies -and @($task.dependencies).Count -gt 0) {
+        Write-Host ("  dependencies: {0}" -f (@($task.dependencies) -join ", "))
+    }
+    if ($task.verification_status -or $task.last_run_id -or $task.last_result) {
+        Write-Host ("  evidence: verification={0}; last_run={1}; result={2}" -f $task.verification_status, $task.last_run_id, $task.last_result)
+    }
+    if ($task.blocked_reason) { Write-Host ("  blocked: {0}" -f $task.blocked_reason) }
+    if ($task.branch -or $task.github_issue -or $task.github_pr -or $task.ci_status) {
+        Write-Host ("  github: branch={0}; issue={1}; pr={2}; ci={3}" -f $task.branch, $task.github_issue, $task.github_pr, $task.ci_status)
+    }
+}
+
 Write-Host "AI Team context bundle"
 Write-Host "Project root: $ProjectRoot"
 Write-Host "Mode: $Mode"
@@ -128,7 +184,7 @@ Show-Section "Command Policy" (Join-Path $ProjectRoot ".ai-team\policies\command
 if ($TaskId) {
     $taskPath = Join-Path $ProjectRoot ".ai-team\tasks\$TaskId.md"
     Show-Section "Task: $TaskId" $taskPath 140 220
-    Show-Section "Task State" (Join-Path $ProjectRoot ".ai-team\state\tasks.json") 120 200
+    Show-TaskStateSummary $TaskId (Join-Path $ProjectRoot ".ai-team\state\tasks.json")
     Show-RunSummary $TaskId (Join-Path $ProjectRoot ".ai-team\state\runs.json") $MaxRuns
 }
 else {

@@ -125,6 +125,9 @@ jobs:
           $compactText = $compactContext -join "`n"
           if ($compactText -notmatch "Recent Run Evidence") { throw "Compact context did not include run evidence heading." }
           if ($compactText -notmatch "demo-001-executor") { throw "Compact context did not include latest task run summary." }
+          if ($compactText -notmatch "Task State") { throw "Compact context did not include task state heading." }
+          if ($compactText -notmatch "demo-001 \\[planned\\] Demo Scope") { throw "Compact context did not include task state summary." }
+          if ($compactText -match '"tasks"') { throw "Compact context should summarize task state instead of dumping tasks.json." }
           if ($compactText -match '"runs"') { throw "Compact context should summarize run evidence instead of dumping runs.json." }
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode standard | Out-Null
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001 -Mode full | Out-Null
