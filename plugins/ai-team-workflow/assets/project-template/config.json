@@ -32,6 +32,7 @@
   "commands": ".ai-team/commands.json",
   "commandPolicy": ".ai-team/policies/command-policy.md",
   "workflowModePolicy": ".ai-team/policies/workflow-modes.md",
+  "workflowModeClassifier": ".ai-team/scripts/Get-AiTeamWorkflowMode.ps1",
   "commandRiskClassifier": ".ai-team/scripts/Test-AiTeamCommand.ps1",
   "diffBoundaryChecker": ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
   "releaseGate": ".ai-team/checklists/release-gate.md",

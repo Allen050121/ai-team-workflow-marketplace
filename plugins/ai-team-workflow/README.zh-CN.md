@@ -13,6 +13,7 @@
 - Codex 自然语言路由规则。
 - Project Intake Gate：在规划前自动识别新项目、已有代码库、已有 AI Team 项目、混合/笔记目录或不清晰目录。
 - Workflow Modes：`light`、`standard`、`strict`、`parallel`，让小任务更快，高风险任务更稳。
+- 保守的 workflow mode 自动分类器，用于任务创建和健康检查。
 - Compact context：默认使用紧凑上下文，只有缺信息时才升级，降低 token 消耗。
 - 任务卡、记忆文件、提示词和质量门禁。
 - 规模、质量、性能门禁，避免粗糙临时代码和过度设计。

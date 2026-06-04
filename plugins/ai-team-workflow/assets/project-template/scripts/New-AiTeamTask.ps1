@@ -16,7 +16,7 @@ param(
     [ValidateSet("Prototype", "MVP", "Production")]
     [string]$WorkMode = "MVP",
 
-    [ValidateSet("light", "standard", "strict", "parallel")]
+    [ValidateSet("auto", "light", "standard", "strict", "parallel")]
     [string]$WorkflowMode = "standard",
 
     [string[]]$Dependencies = @(),
@@ -56,6 +56,20 @@ if ($normalizedAllowedFiles.Count -gt 0) {
 }
 else {
     $allowed = "- Dispatcher must fill this in before Executor starts."
+}
+
+if ($WorkflowMode -eq "auto") {
+    $modeScript = Join-Path $ProjectRoot ".ai-team\scripts\Get-AiTeamWorkflowMode.ps1"
+    if (-not (Test-Path -LiteralPath $modeScript)) {
+        throw "WorkflowMode auto requested, but missing: $modeScript"
+    }
+
+    $inferred = powershell -NoProfile -ExecutionPolicy Bypass -File $modeScript -Title $Title -AllowedFiles $normalizedAllowedFiles -Mode $Mode -WorkMode $WorkMode -Json | ConvertFrom-Json
+    $WorkflowMode = $inferred.workflow_mode
+    Write-Host ("Inferred workflow mode: {0}" -f $WorkflowMode)
+    foreach ($reason in @($inferred.reasons)) {
+        Write-Host ("- {0}" -f $reason)
+    }
 }
 
 $content = Get-Content -LiteralPath $templatePath -Encoding UTF8 -Raw

@@ -108,6 +108,104 @@ function Test-TaskFileBoundaries {
     }
 }
 
+function Get-MarkdownSection {
+    param(
+        [string]$Content,
+        [string]$Heading
+    )
+
+    $pattern = "(?s)## " + [regex]::Escape($Heading) + "\s+(.+?)(\r?\n## |\z)"
+    if ($Content -match $pattern) {
+        return $Matches[1].Trim()
+    }
+
+    return ""
+}
+
+function Get-TaskField {
+    param(
+        [string]$Content,
+        [string]$Name
+    )
+
+    if ($Content -match ("(?m)^" + [regex]::Escape($Name) + ":[ \t]*[""']?([^""'\r\n]*)")) {
+        return $Matches[1].Trim()
+    }
+    return ""
+}
+
+function Get-AllowedFilesFromTask {
+    param([string]$Content)
+
+    $match = [regex]::Match($Content, "(?ms)^### Allowed To Modify\s*(?<body>.*?)(?:^### |^## |\z)")
+    if (-not $match.Success) { return @() }
+
+    return @(
+        $match.Groups["body"].Value -split "\r?\n" |
+            ForEach-Object { $_.Trim() } |
+            Where-Object { $_ -match "^\-\s+\S" } |
+            ForEach-Object { $_ -replace "^\-\s+", "" } |
+            Where-Object { $_ -and $_ -notmatch "Dispatcher must fill" }
+    )
+}
+
+function Test-WorkflowModeClassification {
+    $classifierPath = Join-Path $aiTeamRoot "scripts\Get-AiTeamWorkflowMode.ps1"
+    $tasksDir = Join-Path $aiTeamRoot "tasks"
+    if (-not (Test-Path -LiteralPath $classifierPath) -or -not (Test-Path -LiteralPath $tasksDir)) { return }
+
+    $cases = @(
+        @{ title = "Fix README typo"; files = @("README.md"); expected = "light" },
+        @{ title = "Implement login auth"; files = @("src/auth.ts"); expected = "strict" },
+        @{ title = "Build dashboard filters"; files = @("src/dashboard.tsx", "src/filters.ts"); expected = "standard" },
+        @{ title = "Parallel docs cleanup"; files = @("docs/usage.md"); mode = "parallel"; expected = "parallel" }
+    )
+
+    foreach ($case in $cases) {
+        $mode = if ($case.mode) { $case.mode } else { "serial" }
+        try {
+            $result = powershell -NoProfile -ExecutionPolicy Bypass -File $classifierPath -Title $case.title -AllowedFiles $case.files -Mode $mode -Json | ConvertFrom-Json
+            if ($result.workflow_mode -ne $case.expected) {
+                Add-CheckError "Workflow mode classifier expected '$($case.title)' to be $($case.expected), got $($result.workflow_mode)."
+            }
+        }
+        catch {
+            Add-CheckError "Workflow mode classifier failed for '$($case.title)': $($_.Exception.Message)"
+        }
+    }
+
+    foreach ($taskFile in Get-ChildItem -LiteralPath $tasksDir -Filter "*.md" -File) {
+        if ($taskFile.Name -eq "TEMPLATE.md") { continue }
+
+        $content = Get-Content -LiteralPath $taskFile.FullName -Raw -Encoding UTF8
+        $taskWorkflowMode = Get-TaskField $content "workflow_mode"
+        if (-not $taskWorkflowMode) { $taskWorkflowMode = "standard" }
+
+        $title = Get-TaskField $content "title"
+        $goal = Get-MarkdownSection $content "Goal"
+        $mode = Get-TaskField $content "mode"
+        if (-not $mode) { $mode = "serial" }
+        $workMode = Get-TaskField $content "work_mode"
+        if (-not $workMode) { $workMode = "MVP" }
+        $allowedFiles = Get-AllowedFilesFromTask $content
+
+        try {
+            $inferred = powershell -NoProfile -ExecutionPolicy Bypass -File $classifierPath -Title $title -Goal $goal -AllowedFiles $allowedFiles -Mode $mode -WorkMode $workMode -Json | ConvertFrom-Json
+        }
+        catch {
+            Add-CheckError "Workflow mode inference failed for .ai-team/tasks/$($taskFile.Name): $($_.Exception.Message)"
+            continue
+        }
+
+        if ($inferred.workflow_mode -eq "strict" -and $taskWorkflowMode -ne "strict") {
+            Add-CheckError "Task .ai-team/tasks/$($taskFile.Name) is likely strict risk but workflow_mode is '$taskWorkflowMode'."
+        }
+        elseif ($inferred.workflow_mode -eq "parallel" -and $taskWorkflowMode -ne "parallel") {
+            Add-CheckError "Task .ai-team/tasks/$($taskFile.Name) is marked mode=parallel but workflow_mode is '$taskWorkflowMode'."
+        }
+    }
+}
+
 function Test-CompactContext {
     $contextScript = Join-Path $aiTeamRoot "scripts\Get-AiTeamContext.ps1"
     $tasksDir = Join-Path $aiTeamRoot "tasks"
@@ -170,6 +268,7 @@ $requiredPaths = @(
     "prompts\executor.md",
     "prompts\reviewer-verifier.md",
     "scripts\Get-AiTeamContext.ps1",
+    "scripts\Get-AiTeamWorkflowMode.ps1",
     "scripts\Get-AiTeamIntake.ps1",
     "scripts\Get-AiTeamStatus.ps1",
     "scripts\Sync-AiTeamState.ps1",
@@ -203,6 +302,7 @@ Test-PowerShellSyntax "scripts"
 Test-PowerShellSyntax "hooks"
 Test-CommandRiskClassifier
 Test-TaskFileBoundaries
+Test-WorkflowModeClassification
 Test-CompactContext
 
 if (-not $SkipSync) {
@@ -246,4 +346,4 @@ if ($errors.Count -gt 0) {
 }
 
 Write-Host "Result: passed"
-Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, sync, status, and compact context."
+Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, workflow modes, sync, status, and compact context."

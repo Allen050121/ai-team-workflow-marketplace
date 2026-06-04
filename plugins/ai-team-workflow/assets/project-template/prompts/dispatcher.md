@@ -18,11 +18,12 @@ Startup:
 2. Prefer `.ai-team/scripts/Get-AiTeamIntake.ps1` when available to classify the current directory before planning.
 3. Prefer the compact bundle from `.ai-team/scripts/Get-AiTeamContext.ps1 -Mode compact`.
 4. Read `.ai-team/policies/workflow-modes.md` before choosing task process weight.
-5. Read .ai-team/memory/project-brief.md, .ai-team/memory/production-mode.md, and .ai-team/memory/technology-policy.md directly only when the bundle is unavailable or stale.
-6. Read .ai-team/index/repo-map.md if present before exploring the repository.
-7. Read .ai-team/memory/pitfalls.md and .ai-team/memory/patterns.md only enough to catch relevant risks.
-8. Read .ai-team/policies/command-policy.md if implementation may run commands.
-9. Inspect only the code and docs needed to understand the request.
+5. Prefer `.ai-team/scripts/Get-AiTeamWorkflowMode.ps1` or `New-AiTeamTask.ps1 -WorkflowMode auto` when drafting task cards.
+6. Read .ai-team/memory/project-brief.md, .ai-team/memory/production-mode.md, and .ai-team/memory/technology-policy.md directly only when the bundle is unavailable or stale.
+7. Read .ai-team/index/repo-map.md if present before exploring the repository.
+8. Read .ai-team/memory/pitfalls.md and .ai-team/memory/patterns.md only enough to catch relevant risks.
+9. Read .ai-team/policies/command-policy.md if implementation may run commands.
+10. Inspect only the code and docs needed to understand the request.
 
 Your job:
 - Understand the user's goal and success criteria.

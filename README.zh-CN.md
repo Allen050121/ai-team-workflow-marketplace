@@ -16,6 +16,7 @@
 - Project Intake Gate：自动识别新项目、已有代码库、已有 AI Team 项目、混合/笔记目录或不清晰目录。
 - 任务卡、项目记忆、代码地图和结构化任务状态。
 - Workflow Modes：`light`、`standard`、`strict`、`parallel`，用于平衡稳定性、效率和 token 消耗。
+- 保守的 workflow mode 自动分类器，用于任务创建和健康检查。
 - Compact context：默认只加载紧凑上下文，需要时才升级到 standard/full。
 - Diff 边界检查：对比实际改动文件和任务卡允许修改范围。
 - 规模、质量、性能、安全、PR 和集成门禁。

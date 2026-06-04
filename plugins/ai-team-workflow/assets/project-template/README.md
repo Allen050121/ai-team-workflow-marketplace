@@ -55,7 +55,13 @@ Codex should route the request through `AGENTS.md` and `.ai-team/`. The scripts 
 Create a task card:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/New-AiTeamTask.ps1 -Id login-auth -Title "Implement login auth"
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/New-AiTeamTask.ps1 -Id login-auth -Title "Implement login auth" -WorkflowMode auto
+```
+
+Preview workflow mode:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Get-AiTeamWorkflowMode.ps1 -Title "Fix README typo" -AllowedFiles "README.md"
 ```
 
 Record run evidence:
@@ -116,6 +122,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - `.ai-team/checklists/`: plan, review, security, release, and integration gates.
 - `.ai-team/policies/command-policy.md`: safe, approval-required, and forbidden command classes.
 - `.ai-team/policies/workflow-modes.md`: light, standard, strict, and parallel workflow selection plus token discipline.
+- `.ai-team/scripts/Get-AiTeamWorkflowMode.ps1`: conservative workflow mode classifier used by task creation and health checks.
 - `.ai-team/scripts/Test-AiTeamCommand.ps1`: lightweight command risk classifier.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.

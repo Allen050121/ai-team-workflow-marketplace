@@ -21,11 +21,27 @@ Use workflow modes to spend the right amount of process and context for each tas
 
 ## Selection Rules
 
+- Prefer `.ai-team/scripts/Get-AiTeamWorkflowMode.ps1` or `New-AiTeamTask.ps1 -WorkflowMode auto` when creating task cards.
 - Default to `light` only when the change is small, reversible, and does not touch shared contracts.
 - Default to `standard` for ordinary product work.
 - Escalate to `strict` when any Production Mode trigger appears.
 - Use `parallel` only when file boundaries are explicit and no task touches shared schemas, auth, payments, migrations, common APIs, or build configuration.
 - If mode is uncertain, choose the safer higher mode but keep context compact.
+
+## Automatic Classification
+
+The classifier is intentionally conservative:
+
+- High-risk signals such as auth, payments, migrations, databases, secrets, dependencies, deployment, security, or production classify as `strict`.
+- Parallel task mode classifies as `parallel` unless a human chooses to split the task differently.
+- Low-risk signals such as docs, copy, typo, style, spacing, labels, or small UI polish can classify as `light` when file boundaries are narrow.
+- Everything else defaults to `standard`.
+
+Run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Get-AiTeamWorkflowMode.ps1 -Title "Implement login auth" -AllowedFiles "src/auth.ts"
+```
 
 ## Token Discipline
 
