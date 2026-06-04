@@ -24,6 +24,8 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Workflow Modes for `light`, `standard`, `strict`, and `parallel` execution so small work stays fast and high-risk work stays gated.
 - Conservative workflow mode classifier for automatic `light`, `standard`, `strict`, or `parallel` task defaults.
 - Compact context defaults with explicit escalation to standard/full context only when needed, reducing token waste.
+- Structured review report that combines changed files, boundary checks, state machine checks, evidence, and a recommended decision.
+- State machine checks for review/done transitions and strict task evidence.
 - Release gate for deployment, rollback, smoke test, and production approval checks.
 
 ## Install Global Template

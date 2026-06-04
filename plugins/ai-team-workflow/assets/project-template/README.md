@@ -100,6 +100,18 @@ Review a task diff:
 powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamTask.ps1 -TaskId login-auth -WorktreePath <path-to-worktree>
 ```
 
+Generate a structured review report:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/New-AiTeamReviewReport.ps1 -TaskId login-auth
+```
+
+Check task state and evidence requirements:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamStateMachine.ps1
+```
+
 ## Non-Negotiable Rules
 
 - Small low-risk changes may use `light` workflow mode. Normal product work uses `standard`. Auth, data, payments, dependencies, deployment, security, or production-facing work uses `strict`.
@@ -109,6 +121,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - A task that touches shared data models, common APIs, auth, payment, migrations, or build configuration is serial by default.
 - No Executor approves its own work.
 - No task is done without a reproducible verification command or an explicit reason why verification is impossible.
+- Tasks in `review` need executor evidence. Tasks marked `done` need executor and reviewer evidence.
+- Strict tasks marked `done` need integration evidence or an explicit waiver.
 - Approval-required commands must follow `.ai-team/policies/command-policy.md`.
 - Unknown commands default to approval-required when classified by `.ai-team/scripts/Test-AiTeamCommand.ps1`.
 - Deployment, publishing, release tagging, and production-facing actions must pass Release Gate.
@@ -123,6 +137,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - `.ai-team/policies/command-policy.md`: safe, approval-required, and forbidden command classes.
 - `.ai-team/policies/workflow-modes.md`: light, standard, strict, and parallel workflow selection plus token discipline.
 - `.ai-team/scripts/Get-AiTeamWorkflowMode.ps1`: conservative workflow mode classifier used by task creation and health checks.
+- `.ai-team/scripts/New-AiTeamReviewReport.ps1`: structured review report with boundary, state, evidence, and recommended decision.
+- `.ai-team/scripts/Test-AiTeamStateMachine.ps1`: task state and evidence consistency checks.
 - `.ai-team/scripts/Test-AiTeamCommand.ps1`: lightweight command risk classifier.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.

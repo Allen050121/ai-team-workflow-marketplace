@@ -49,7 +49,7 @@ function Get-AllowedBoundary {
                 $_ -and
                 $_ -notmatch "Dispatcher must fill this in" -and
                 $_ -notmatch "TODO" -and
-                $_ -notmatch "^\$_$"
+                $_ -notmatch '^\$_$'
             } |
             ForEach-Object { Convert-ToRepoPath $_ }
     )

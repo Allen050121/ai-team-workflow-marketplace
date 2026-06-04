@@ -18,6 +18,8 @@
 - Workflow Modes：`light`、`standard`、`strict`、`parallel`，用于平衡稳定性、效率和 token 消耗。
 - 保守的 workflow mode 自动分类器，用于任务创建和健康检查。
 - Compact context：默认只加载紧凑上下文，需要时才升级到 standard/full。
+- 结构化 Review Report：汇总改动文件、边界检查、状态机检查、运行证据和建议结论。
+- 状态机检查：约束 review/done 状态和 strict 任务证据。
 - Diff 边界检查：对比实际改动文件和任务卡允许修改范围。
 - 规模、质量、性能、安全、PR 和集成门禁。
 - Production Mode、命令安全、发布门禁和简洁运行证据。

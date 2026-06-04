@@ -271,9 +271,11 @@ $requiredPaths = @(
     "scripts\Get-AiTeamWorkflowMode.ps1",
     "scripts\Get-AiTeamIntake.ps1",
     "scripts\Get-AiTeamStatus.ps1",
+    "scripts\New-AiTeamReviewReport.ps1",
     "scripts\Sync-AiTeamState.ps1",
     "scripts\Test-AiTeamCommand.ps1",
     "scripts\Test-AiTeamDiffBoundary.ps1",
+    "scripts\Test-AiTeamStateMachine.ps1",
     "scripts\Update-AiTeamRun.ps1",
     "tasks\TEMPLATE.md",
     "state\runs.json"
@@ -317,6 +319,19 @@ if (-not $SkipSync) {
     }
 }
 
+$stateMachineScript = Join-Path $aiTeamRoot "scripts\Test-AiTeamStateMachine.ps1"
+if (Test-Path -LiteralPath $stateMachineScript) {
+    try {
+        powershell -NoProfile -ExecutionPolicy Bypass -File $stateMachineScript | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Add-CheckError "State machine check failed."
+        }
+    }
+    catch {
+        Add-CheckError "State machine check failed: $($_.Exception.Message)"
+    }
+}
+
 $statusScript = Join-Path $aiTeamRoot "scripts\Get-AiTeamStatus.ps1"
 if (Test-Path -LiteralPath $statusScript) {
     try {
@@ -346,4 +361,4 @@ if ($errors.Count -gt 0) {
 }
 
 Write-Host "Result: passed"
-Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, workflow modes, sync, status, and compact context."
+Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, workflow modes, state machine, sync, status, and compact context."

@@ -15,6 +15,8 @@
 - Workflow Modes：`light`、`standard`、`strict`、`parallel`，让小任务更快，高风险任务更稳。
 - 保守的 workflow mode 自动分类器，用于任务创建和健康检查。
 - Compact context：默认使用紧凑上下文，只有缺信息时才升级，降低 token 消耗。
+- 结构化 Review Report：汇总改动文件、边界检查、状态机检查、运行证据和建议结论。
+- 状态机检查：约束 review/done 状态和 strict 任务证据。
 - 任务卡、记忆文件、提示词和质量门禁。
 - 规模、质量、性能门禁，避免粗糙临时代码和过度设计。
 - Production Mode 策略，用于真实用户、持久化数据、登录、支付、部署和外部服务。
