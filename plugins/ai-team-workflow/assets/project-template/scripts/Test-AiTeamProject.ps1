@@ -160,6 +160,7 @@ $requiredPaths = @(
     "memory\pitfalls.md",
     "memory\patterns.md",
     "policies\command-policy.md",
+    "policies\workflow-modes.md",
     "checklists\plan-gate.md",
     "checklists\project-intake-gate.md",
     "checklists\review-gate.md",
@@ -192,6 +193,9 @@ if (Test-Path -LiteralPath $taskTemplatePath) {
     $taskTemplate = Get-Content -LiteralPath $taskTemplatePath -Raw -Encoding UTF8
     if ($taskTemplate -notmatch "(?m)^work_mode:") {
         Add-CheckError "Task template is missing work_mode."
+    }
+    if ($taskTemplate -notmatch "(?m)^workflow_mode:") {
+        Add-CheckError "Task template is missing workflow_mode."
     }
 }
 

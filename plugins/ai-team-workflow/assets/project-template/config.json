@@ -31,6 +31,7 @@
   "projectIntakeGate": ".ai-team/checklists/project-intake-gate.md",
   "commands": ".ai-team/commands.json",
   "commandPolicy": ".ai-team/policies/command-policy.md",
+  "workflowModePolicy": ".ai-team/policies/workflow-modes.md",
   "commandRiskClassifier": ".ai-team/scripts/Test-AiTeamCommand.ps1",
   "diffBoundaryChecker": ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
   "releaseGate": ".ai-team/checklists/release-gate.md",
@@ -44,15 +45,18 @@
   "hookBundles": {
     "dispatcher": [
       ".ai-team/prompts/dispatcher.md",
+      ".ai-team/policies/workflow-modes.md",
       ".ai-team/checklists/project-intake-gate.md",
       ".ai-team/checklists/plan-gate.md"
     ],
     "executor": [
       ".ai-team/prompts/executor.md",
+      ".ai-team/policies/workflow-modes.md",
       ".ai-team/policies/command-policy.md"
     ],
     "reviewer": [
       ".ai-team/prompts/reviewer-verifier.md",
+      ".ai-team/policies/workflow-modes.md",
       ".ai-team/policies/command-policy.md",
       ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
       ".ai-team/checklists/review-gate.md",
@@ -64,6 +68,7 @@
       ".ai-team/prompts/memory-curator.md"
     ],
     "integration": [
+      ".ai-team/policies/workflow-modes.md",
       ".ai-team/policies/command-policy.md",
       ".ai-team/checklists/release-gate.md",
       ".ai-team/checklists/integration-gate.md"

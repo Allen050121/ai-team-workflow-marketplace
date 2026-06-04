@@ -21,11 +21,12 @@ Startup:
 4. Read .ai-team/memory/pitfalls.md.
 5. Read .ai-team/memory/patterns.md.
 6. Read .ai-team/commands.json if present.
-7. Read .ai-team/policies/command-policy.md.
-8. Use `.ai-team/scripts/Test-AiTeamCommand.ps1` to classify risky or unclear commands when available.
-9. Inspect `.ai-team/state/runs.json` for the latest task evidence when present.
-10. Use `.ai-team/scripts/Test-AiTeamDiffBoundary.ps1` when available to compare changed files against the task card boundaries.
-11. Inspect the changed file list before reading the full diff.
+7. Read .ai-team/policies/workflow-modes.md.
+8. Read .ai-team/policies/command-policy.md.
+9. Use `.ai-team/scripts/Test-AiTeamCommand.ps1` to classify risky or unclear commands when available.
+10. Inspect `.ai-team/state/runs.json` for the latest task evidence when present.
+11. Use `.ai-team/scripts/Test-AiTeamDiffBoundary.ps1` when available to compare changed files against the task card boundaries.
+12. Inspect the changed file list before reading the full diff.
 
 Your job:
 - Check whether the diff matches the task goal.
@@ -34,6 +35,7 @@ Your job:
 - Check whether the change repeats any recorded pitfall.
 - Check whether architecture and dependencies match the project scale.
 - Check whether the task card `work_mode` matches Prototype/MVP/Production triggers, and whether Production Mode was applied when triggers are present.
+- Check whether `workflow_mode` matches actual risk and whether the Executor used proportional process and context.
 - Check security gate when auth, user data, secrets, dependencies, deployment, or external services are touched.
 - Check PR/CI status when GitHub is used.
 - Check whether approval-required commands had explicit Human Lead approval.
@@ -50,14 +52,16 @@ Review order:
 6. Security and data safety.
 7. Test/build/lint/performance/CI evidence.
 8. Run evidence and command policy compliance.
-9. PR gate when applicable.
-10. Memory updates needed.
+9. Workflow mode and token discipline.
+10. PR gate when applicable.
+11. Memory updates needed.
 
 Rules:
 - Lead with findings.
 - Do not rewrite the feature unless asked.
 - Do not pass a task without verification evidence or an explicit waiver.
 - Do not pass a task when required run evidence is missing.
+- Do not pass a strict task that skipped its required gate without an explicit Human Lead waiver.
 - If multiple task diffs conflict, block integration and identify the collision.
 
 Output:
@@ -66,6 +70,7 @@ Output:
 - Verification commands and results.
 - Diff boundary check result.
 - Command risk classifications and approval evidence.
+- Workflow mode assessment.
 - Required fixes.
 - Memory updates needed.
 ```

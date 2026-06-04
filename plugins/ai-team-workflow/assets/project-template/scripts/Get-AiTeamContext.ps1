@@ -203,6 +203,7 @@ function Show-TaskStateSummary {
 
     Write-Host ("- {0} [{1}] {2}" -f $task.task_id, $task.status, $task.title)
     if ($task.work_mode) { Write-Host ("  work_mode: {0}" -f $task.work_mode) }
+    if ($task.workflow_mode) { Write-Host ("  workflow_mode: {0}" -f $task.workflow_mode) }
     if ($task.mode) { Write-Host ("  mode: {0}" -f $task.mode) }
     if ($task.dependencies -and @($task.dependencies).Count -gt 0) {
         Write-Host ("  dependencies: {0}" -f (@($task.dependencies) -join ", "))
@@ -229,6 +230,7 @@ Show-Section "Repo Map" (Join-Path $ProjectRoot ".ai-team\index\repo-map.md") 80
 Show-Section "Pitfalls" (Join-Path $ProjectRoot ".ai-team\memory\pitfalls.md") 80 160
 Show-Section "Patterns" (Join-Path $ProjectRoot ".ai-team\memory\patterns.md") 80 160
 Show-Section "Command Policy" (Join-Path $ProjectRoot ".ai-team\policies\command-policy.md") 80 120
+Show-Section "Workflow Modes" (Join-Path $ProjectRoot ".ai-team\policies\workflow-modes.md") 80 140
 
 if ($TaskId) {
     $taskPath = Join-Path $ProjectRoot ".ai-team\tasks\$TaskId.md"

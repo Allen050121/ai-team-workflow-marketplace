@@ -96,6 +96,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 
 ## Non-Negotiable Rules
 
+- Small low-risk changes may use `light` workflow mode. Normal product work uses `standard`. Auth, data, payments, dependencies, deployment, security, or production-facing work uses `strict`.
+- Parallel execution is a workflow mode, not a default. Use it only when boundaries are clean.
+
 - Default parallelism is 2 to 3 Executor agents. Use 4 only when file boundaries are very clean.
 - A task that touches shared data models, common APIs, auth, payment, migrations, or build configuration is serial by default.
 - No Executor approves its own work.
@@ -112,6 +115,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - `.ai-team/prompts/`: role prompts for Dispatcher, Executor, Reviewer, and Memory Curator.
 - `.ai-team/checklists/`: plan, review, security, release, and integration gates.
 - `.ai-team/policies/command-policy.md`: safe, approval-required, and forbidden command classes.
+- `.ai-team/policies/workflow-modes.md`: light, standard, strict, and parallel workflow selection plus token discipline.
 - `.ai-team/scripts/Test-AiTeamCommand.ps1`: lightweight command risk classifier.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.

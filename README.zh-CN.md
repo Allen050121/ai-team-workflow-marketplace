@@ -10,11 +10,13 @@
 
 ## 它提供什么
 
-- 全局 Human Lead 人设。
+- 全局 Human Lead 画像。
 - 干净的项目级 `.ai-team` 模板。
 - Codex 自然语言路由。
 - Project Intake Gate：自动识别新项目、已有代码库、已有 AI Team 项目、混合/笔记目录或不清晰目录。
 - 任务卡、项目记忆、代码地图和结构化任务状态。
+- Workflow Modes：`light`、`standard`、`strict`、`parallel`，用于平衡稳定性、效率和 token 消耗。
+- Compact context：默认只加载紧凑上下文，需要时才升级到 standard/full。
 - Diff 边界检查：对比实际改动文件和任务卡允许修改范围。
 - 规模、质量、性能、安全、PR 和集成门禁。
 - Production Mode、命令安全、发布门禁和简洁运行证据。
@@ -29,7 +31,7 @@ git clone https://github.com/Allen050121/ai-team-workflow-marketplace.git
 cd ai-team-workflow-marketplace
 ```
 
-在 Codex 里添加这个 marketplace，指向仓库根目录或 marketplace 文件：
+在 Codex 里添加这个 marketplace，指向仓库根目录或 `marketplace.json`：
 
 ```text
 ai-team-workflow-marketplace/marketplace.json
@@ -71,4 +73,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-
 继续到部署前检查，但不要真正部署生产环境。
 ```
 
-Codex 应该读取全局标准，检查当前项目的 `.ai-team`，应用 Project Intake Gate，并自动路由后续工作。
+Codex 应该读取全局标准，检查当前项目的 `.ai-team`，应用 Project Intake Gate，并自动路由后续工作。小任务走 `light`，普通任务走 `standard`，生产/安全/数据/依赖/部署相关任务走 `strict`，只有边界清晰的独立任务才走 `parallel`。

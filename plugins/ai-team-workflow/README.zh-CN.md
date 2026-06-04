@@ -8,12 +8,14 @@
 
 ## 它实现了什么
 
-- 全局 Human Lead 人设。
+- 全局 Human Lead 画像。
 - 全局 `.ai-team` 项目模板。
 - Codex 自然语言路由规则。
 - Project Intake Gate：在规划前自动识别新项目、已有代码库、已有 AI Team 项目、混合/笔记目录或不清晰目录。
+- Workflow Modes：`light`、`standard`、`strict`、`parallel`，让小任务更快，高风险任务更稳。
+- Compact context：默认使用紧凑上下文，只有缺信息时才升级，降低 token 消耗。
 - 任务卡、记忆文件、提示词和质量门禁。
-- 规模、质量、性能门禁，避免糟糕的临时代码和过度设计。
+- 规模、质量、性能门禁，避免粗糙临时代码和过度设计。
 - Production Mode 策略，用于真实用户、持久化数据、登录、支付、部署和外部服务。
 - 与任务卡融合的轻量 GitHub PR、CI、安全门禁。
 - 代码地图和结构化任务状态，让“继续”更可靠。
@@ -65,7 +67,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 我要在这个项目里加会员订阅功能。
 ```
 
-Codex 应该先应用 Project Intake Gate，自动判断当前目录是新项目、已有代码库、已有 AI Team 项目、混合/笔记目录，还是不清晰目录。它不应该盲信你的说法；如果目录信号和你的描述冲突，它会按证据提醒你，并只问真正影响产品、架构、数据、成本、安全或部署的问题。
+Codex 应该先应用 Project Intake Gate，自动判断当前目录是新项目、已有代码库、已有 AI Team 项目、混合/笔记目录，还是不清晰目录。它不会盲信你的说法；如果目录信号和你的描述冲突，它会按证据提醒你，并只问真正影响产品、架构、数据、成本、安全或部署的问题。
 
 后续直接说：
 
@@ -75,10 +77,18 @@ Codex 应该先应用 Project Intake Gate，自动判断当前目录是新项目
 
 Codex 应该自动读取 `.ai-team/tasks/`、`.ai-team/state/tasks.json` 和 `.ai-team/state/runs.json`，判断下一步应该进入 Dispatcher、Executor、Reviewer、Integration 还是 Memory Curator。正常使用时，你不需要粘贴固定角色提示词或状态命令。
 
+## 稳定性与成本策略
+
+- 小而低风险的任务走 `light`，避免无意义的流程和 token 消耗。
+- 普通产品任务走 `standard`，保留任务卡、执行证据和审核。
+- 涉及生产、数据、登录、支付、依赖、部署、安全的任务走 `strict`。
+- 只有文件边界清晰且没有共享状态冲突时才走 `parallel`。
+- Executor 默认使用 compact context，只有说明缺少什么信息时才升级上下文。
+
 ## 生产级约束
 
 - Executor 在任务边界内实现，并记录简洁运行证据。
 - Dispatcher 先判断工作属于 Prototype、MVP 还是 Production，再选择架构和门禁。
-- Reviewer 在通过前检查 diff、验证结果、命令风险分类、命令安全策略和任务证据。
+- Reviewer 在通过前检查 diff、验证结果、workflow mode、命令风险分类、命令安全策略和任务证据。
 - Integration 在可用时使用 GitHub/CI 门禁，部署或发布前使用 Release Gate。
 - 涉及生产、外部服务、付费资源或高风险命令时，仍然需要 Human Lead 批准。

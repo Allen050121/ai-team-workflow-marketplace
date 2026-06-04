@@ -5,6 +5,7 @@ status: "{{STATUS}}"
 owner: "{{OWNER}}"
 mode: "{{MODE}}"
 work_mode: "{{WORK_MODE}}"
+workflow_mode: "{{WORKFLOW_MODE}}"
 created: "{{DATE}}"
 dependencies:
 verification_status: not_run
@@ -28,6 +29,7 @@ tags:
 - Status: `{{STATUS}}`
 - Mode: `{{MODE}}`
 - Work Mode: `{{WORK_MODE}}`
+- Workflow Mode: `{{WORKFLOW_MODE}}`
 - Dependencies:
 - Verification Status: `not_run`
 - Last Run:
@@ -66,11 +68,13 @@ List what this task must not change.
 - `.ai-team/memory/patterns.md`
 - `.ai-team/commands.json`
 - `.ai-team/policies/command-policy.md`
+- `.ai-team/policies/workflow-modes.md`
 - Related source files listed above.
 
 ## Implementation Notes
 
 - Keep the change small enough for one reviewer to inspect quickly.
+- Match process weight to Workflow Mode: light, standard, strict, or parallel.
 - Prefer existing project patterns over new abstractions.
 - If boundaries are wrong, stop and update this card before editing.
 - Create or use a task branch when code changes are required.
@@ -83,6 +87,7 @@ List what this task must not change.
 - [ ] File boundary was respected or this card was updated.
 - [ ] Diff has no unrelated edits.
 - [ ] Pitfalls were checked.
+- [ ] Workflow Mode was appropriate for the risk level.
 - [ ] Verification command was run or explicitly waived with a reason.
 - [ ] Security-sensitive changes passed `.ai-team/checklists/security-gate.md`.
 - [ ] PR/CI status is recorded when GitHub is used.

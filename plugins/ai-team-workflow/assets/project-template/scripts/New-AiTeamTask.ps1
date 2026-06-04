@@ -16,6 +16,9 @@ param(
     [ValidateSet("Prototype", "MVP", "Production")]
     [string]$WorkMode = "MVP",
 
+    [ValidateSet("light", "standard", "strict", "parallel")]
+    [string]$WorkflowMode = "standard",
+
     [string[]]$Dependencies = @(),
 
     [string[]]$AllowedFiles = @(),
@@ -62,6 +65,7 @@ $content = $content.Replace("{{STATUS}}", $Status)
 $content = $content.Replace("{{OWNER}}", $Owner)
 $content = $content.Replace("{{MODE}}", $Mode)
 $content = $content.Replace("{{WORK_MODE}}", $WorkMode)
+$content = $content.Replace("{{WORKFLOW_MODE}}", $WorkflowMode)
 $content = $content.Replace("{{DATE}}", (Get-Date -Format "yyyy-MM-dd"))
 $content = $content.Replace("dependencies:", ("dependencies: " + (($Dependencies | ForEach-Object { $_.Trim() } | Where-Object { $_ }) -join ", ")))
 $content = $content.Replace("{{ALLOWED_FILES}}", $allowed)

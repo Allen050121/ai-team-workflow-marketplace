@@ -21,6 +21,8 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Command safety policy for dependency, data, deployment, git push, and external-service actions.
 - Lightweight command risk classifier for `safe`, `approval_required`, and `forbidden` decisions.
 - Diff boundary checker that compares changed files with each task card's `Allowed To Modify` section.
+- Workflow Modes for `light`, `standard`, `strict`, and `parallel` execution so small work stays fast and high-risk work stays gated.
+- Compact context defaults with explicit escalation to standard/full context only when needed, reducing token waste.
 - Release gate for deployment, rollback, smoke test, and production approval checks.
 
 ## Install Global Template

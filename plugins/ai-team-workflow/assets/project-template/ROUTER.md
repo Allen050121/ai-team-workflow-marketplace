@@ -19,7 +19,7 @@ Use this file when a tool supports project instructions such as `AGENTS.md`.
 | 审核 / review / 检查 + task id | Reviewer/Verifier |
 | 合并 / 集成 / 部署 / 上线 | Integration Gate |
 | 复盘 / 记录踩坑 / 更新记忆 | Memory Curator |
-| 继续 / 下一步 / 接着做 | Inspect task cards, then route to Executor or Reviewer |
+| 继续 / 下一步 / 接着做 | Inspect task cards, state, and run evidence, then route to Executor or Reviewer |
 
 ## Default Startup
 
@@ -36,6 +36,7 @@ Always load:
 - `.ai-team/memory/pitfalls.md`
 - `.ai-team/memory/patterns.md`
 - `.ai-team/policies/command-policy.md`
+- `.ai-team/policies/workflow-modes.md`
 - `.ai-team/checklists/project-intake-gate.md`
 
 Then load the routed role prompt:
