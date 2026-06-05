@@ -74,6 +74,23 @@ function Get-GitChangedFiles {
     return $files
 }
 
+function Test-GitRepository {
+    param([string]$Path)
+
+    try {
+        $previousErrorAction = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        git -C $Path rev-parse --is-inside-work-tree 2>$null | Out-Null
+        $exitCode = $LASTEXITCODE
+        $ErrorActionPreference = $previousErrorAction
+        return $exitCode -eq 0
+    }
+    catch {
+        $ErrorActionPreference = "Stop"
+        return $false
+    }
+}
+
 $taskContent = Get-Content -LiteralPath $taskPath -Encoding UTF8 -Raw
 $task = [ordered]@{
     task_id = $TaskId
@@ -94,14 +111,18 @@ if ($taskState -and $taskState.tasks) {
     $stateTask = @($taskState.tasks | Where-Object { $_.task_id -eq $TaskId } | Select-Object -First 1)
 }
 
-$changedFiles = Get-GitChangedFiles $WorktreePath $BaseRef $IncludeAiTeam.IsPresent
+$isGitRepository = Test-GitRepository $WorktreePath
+$changedFiles = @()
+if ($isGitRepository) {
+    $changedFiles = Get-GitChangedFiles $WorktreePath $BaseRef $IncludeAiTeam.IsPresent
+}
 $latestExecutor = Get-LatestRun $runs $TaskId "executor"
 $latestReviewer = Get-LatestRun $runs $TaskId "reviewer"
 $latestIntegration = Get-LatestRun $runs $TaskId "integration"
 
 $boundaryResult = $null
 $boundaryScript = Join-Path $ProjectRoot ".ai-team\scripts\Test-AiTeamDiffBoundary.ps1"
-if (Test-Path -LiteralPath $boundaryScript) {
+if ($isGitRepository -and (Test-Path -LiteralPath $boundaryScript)) {
     $boundaryJson = powershell -NoProfile -ExecutionPolicy Bypass -File $boundaryScript -TaskId $TaskId -WorktreePath $WorktreePath -BaseRef $BaseRef -Json 2>$null
     if ($boundaryJson) {
         $boundaryResult = $boundaryJson | ConvertFrom-Json
@@ -120,6 +141,7 @@ if (Test-Path -LiteralPath $stateMachineScript) {
 $warnings = New-Object System.Collections.Generic.List[string]
 $blocking = New-Object System.Collections.Generic.List[string]
 
+if (-not $isGitRepository) { $warnings.Add("Git repository unavailable; changed files and boundary check were skipped.") | Out-Null }
 if (-not $latestExecutor) { $warnings.Add("No executor run evidence found.") | Out-Null }
 if ($latestExecutor -and -not $latestExecutor.verification) { $warnings.Add("Latest executor run has no verification entries.") | Out-Null }
 if ($boundaryResult -and $boundaryResult.status -ne "passed") { $blocking.Add("Diff boundary check failed.") | Out-Null }
