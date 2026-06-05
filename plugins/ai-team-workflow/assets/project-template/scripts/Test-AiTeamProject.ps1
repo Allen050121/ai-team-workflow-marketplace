@@ -251,6 +251,7 @@ if (-not (Test-Path -LiteralPath $aiTeamRoot)) {
 
 $requiredPaths = @(
     "config.json",
+    "VERSION.json",
     "commands.json",
     "memory\project-brief.md",
     "memory\production-mode.md",
@@ -271,6 +272,7 @@ $requiredPaths = @(
     "scripts\Get-AiTeamWorkflowMode.ps1",
     "scripts\Get-AiTeamIntake.ps1",
     "scripts\Get-AiTeamStatus.ps1",
+    "scripts\Measure-AiTeamContext.ps1",
     "scripts\New-AiTeamReviewReport.ps1",
     "scripts\Sync-AiTeamState.ps1",
     "scripts\Test-AiTeamCommand.ps1",
@@ -288,6 +290,8 @@ foreach ($relativePath in $requiredPaths) {
 foreach ($jsonPath in @("config.json", "commands.json", "state\tasks.json", "state\runs.json")) {
     Test-JsonFile $jsonPath
 }
+
+Test-JsonFile "VERSION.json"
 
 $taskTemplatePath = Join-Path $aiTeamRoot "tasks\TEMPLATE.md"
 if (Test-Path -LiteralPath $taskTemplatePath) {
@@ -352,6 +356,16 @@ if (Test-Path -LiteralPath $contextScript) {
     }
 }
 
+$budgetScript = Join-Path $aiTeamRoot "scripts\Measure-AiTeamContext.ps1"
+if (Test-Path -LiteralPath $budgetScript) {
+    try {
+        powershell -NoProfile -ExecutionPolicy Bypass -File $budgetScript -Json | ConvertFrom-Json | Out-Null
+    }
+    catch {
+        Add-CheckError "Context budget check failed: $($_.Exception.Message)"
+    }
+}
+
 if ($errors.Count -gt 0) {
     Write-Host "Result: failed"
     foreach ($errorItem in $errors) {
@@ -361,4 +375,4 @@ if ($errors.Count -gt 0) {
 }
 
 Write-Host "Result: passed"
-Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, workflow modes, state machine, sync, status, and compact context."
+Write-Host "Checked structure, JSON, PowerShell syntax, command risk rules, workflow modes, state machine, sync, status, compact context, and context budget."

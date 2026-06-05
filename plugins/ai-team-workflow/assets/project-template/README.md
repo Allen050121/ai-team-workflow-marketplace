@@ -103,13 +103,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 Generate a structured review report:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/New-AiTeamReviewReport.ps1 -TaskId login-auth
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/New-AiTeamReviewReport.ps1 -TaskId login-auth -OutFile auto
 ```
 
 Check task state and evidence requirements:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamStateMachine.ps1
+```
+
+Measure context budget before loading large memory or run evidence:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Measure-AiTeamContext.ps1
 ```
 
 ## Non-Negotiable Rules
@@ -139,6 +145,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 - `.ai-team/scripts/Get-AiTeamWorkflowMode.ps1`: conservative workflow mode classifier used by task creation and health checks.
 - `.ai-team/scripts/New-AiTeamReviewReport.ps1`: structured review report with boundary, state, evidence, and recommended decision.
 - `.ai-team/scripts/Test-AiTeamStateMachine.ps1`: task state and evidence consistency checks.
+- `.ai-team/scripts/Measure-AiTeamContext.ps1`: context size and token budget estimate for memory, tasks, repo-map, and runs.
 - `.ai-team/scripts/Test-AiTeamCommand.ps1`: lightweight command risk classifier.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.

@@ -25,7 +25,10 @@ Codex-first AI development team workflow packaged as a local plugin.
 - Conservative workflow mode classifier for automatic `light`, `standard`, `strict`, or `parallel` task defaults.
 - Compact context defaults with explicit escalation to standard/full context only when needed, reducing token waste.
 - Structured review report that combines changed files, boundary checks, state machine checks, evidence, and a recommended decision.
+- Persisted review reports under `.ai-team/reports/` when using `-OutFile auto`.
 - State machine checks for review/done transitions and strict task evidence.
+- Template version tracking and migration reports during project updates.
+- Context budget measurement for memory, task cards, repo maps, and run evidence.
 - Release gate for deployment, rollback, smoke test, and production approval checks.
 
 ## Install Global Template
@@ -47,6 +50,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-
 ```
 
 This updates workflow-managed files such as scripts, prompts, checklists, policies, hooks, and templates. It preserves project memory, task cards, task state, repo map, and commands.
+It also writes a migration report under `.ai-team/reports/` and runs the project health check by default.
 
 ## Check A Project
 

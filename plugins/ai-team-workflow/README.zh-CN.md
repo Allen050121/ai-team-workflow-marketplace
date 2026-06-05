@@ -16,7 +16,10 @@
 - 保守的 workflow mode 自动分类器，用于任务创建和健康检查。
 - Compact context：默认使用紧凑上下文，只有缺信息时才升级，降低 token 消耗。
 - 结构化 Review Report：汇总改动文件、边界检查、状态机检查、运行证据和建议结论。
+- 使用 `-OutFile auto` 时，Review Report 会保存到 `.ai-team/reports/`。
 - 状态机检查：约束 review/done 状态和 strict 任务证据。
+- 项目更新时记录模板版本和 migration report。
+- Context budget 检查：衡量 memory、任务卡、repo map、run evidence 的上下文成本。
 - 任务卡、记忆文件、提示词和质量门禁。
 - 规模、质量、性能门禁，避免粗糙临时代码和过度设计。
 - Production Mode 策略，用于真实用户、持久化数据、登录、支付、部署和外部服务。
@@ -47,6 +50,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-
 ```
 
 它只更新工作流管理的文件，例如 scripts、prompts、checklists、policies、hooks 和模板文件。项目记忆、任务卡、任务状态、repo map 和 commands 会被保留。
+更新后会在 `.ai-team/reports/` 写入 migration report，并默认运行项目健康检查。
 
 ## 检查项目
 

@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "templateVersion": "0.5.0",
   "branchPrefix": "codex/",
   "defaultMaxParallelAgents": 3,
   "absoluteMaxParallelAgents": 4,
@@ -35,6 +36,7 @@
   "workflowModeClassifier": ".ai-team/scripts/Get-AiTeamWorkflowMode.ps1",
   "stateMachineChecker": ".ai-team/scripts/Test-AiTeamStateMachine.ps1",
   "reviewReport": ".ai-team/scripts/New-AiTeamReviewReport.ps1",
+  "contextBudgetChecker": ".ai-team/scripts/Measure-AiTeamContext.ps1",
   "commandRiskClassifier": ".ai-team/scripts/Test-AiTeamCommand.ps1",
   "diffBoundaryChecker": ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
   "releaseGate": ".ai-team/checklists/release-gate.md",
@@ -54,6 +56,7 @@
     ],
     "executor": [
       ".ai-team/prompts/executor.md",
+      ".ai-team/scripts/Measure-AiTeamContext.ps1",
       ".ai-team/policies/workflow-modes.md",
       ".ai-team/policies/command-policy.md"
     ],
@@ -62,6 +65,7 @@
       ".ai-team/policies/workflow-modes.md",
       ".ai-team/policies/command-policy.md",
       ".ai-team/scripts/New-AiTeamReviewReport.ps1",
+      ".ai-team/scripts/Measure-AiTeamContext.ps1",
       ".ai-team/scripts/Test-AiTeamStateMachine.ps1",
       ".ai-team/scripts/Test-AiTeamDiffBoundary.ps1",
       ".ai-team/checklists/review-gate.md",

@@ -8,6 +8,8 @@ param(
 
     [switch]$IncludeAiTeam,
 
+    [string]$OutFile,
+
     [switch]$Json
 )
 
@@ -151,6 +153,24 @@ $report = [ordered]@{
     recommended_decision = $decision
 }
 
+$writtenPath = ""
+if ($OutFile) {
+    if ($OutFile -eq "auto") {
+        $reportsDir = Join-Path $ProjectRoot ".ai-team\reports"
+        New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
+        $safeTaskId = $TaskId -replace "[^a-zA-Z0-9._-]", "-"
+        $OutFile = Join-Path $reportsDir ("$safeTaskId-review.json")
+    }
+    else {
+        $parent = Split-Path -Parent $OutFile
+        if ($parent) {
+            New-Item -ItemType Directory -Force -Path $parent | Out-Null
+        }
+    }
+    $report | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $OutFile -Encoding UTF8
+    $writtenPath = (Resolve-Path $OutFile).Path
+}
+
 if ($Json) {
     $report | ConvertTo-Json -Depth 12
 }
@@ -159,6 +179,7 @@ else {
     Write-Host ("Task: {0} - {1}" -f $TaskId, $task.title)
     Write-Host ("Status: {0}; work_mode: {1}; workflow_mode: {2}" -f $task.status, $task.work_mode, $task.workflow_mode)
     Write-Host ("Recommended decision: {0}" -f $decision)
+    if ($writtenPath) { Write-Host ("Report file: {0}" -f $writtenPath) }
     Write-Host ""
     Write-Host "Changed files:"
     foreach ($file in $changedFiles) { Write-Host ("- {0}" -f $file) }

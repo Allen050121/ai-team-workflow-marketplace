@@ -36,6 +36,21 @@ foreach ($item in Get-ChildItem -LiteralPath $TemplateRoot -Force) {
 }
 
 $root = $ProjectPath -replace "\\", "/"
+$versionPath = Join-Path $Target "VERSION.json"
+$configPath = Join-Path $Target "config.json"
+if ((Test-Path -LiteralPath $versionPath) -and (Test-Path -LiteralPath $configPath)) {
+    try {
+        $version = Get-Content -LiteralPath $versionPath -Encoding UTF8 -Raw | ConvertFrom-Json
+        $config = Get-Content -LiteralPath $configPath -Encoding UTF8 -Raw | ConvertFrom-Json
+        $config | Add-Member -NotePropertyName "installedTemplateVersion" -NotePropertyValue $version.templateVersion -Force
+        $config | Add-Member -NotePropertyName "installedAt" -NotePropertyValue (Get-Date).ToString("o") -Force
+        $config | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $configPath -Encoding UTF8
+    }
+    catch {
+        Write-Host "Warning: could not record installed template version: $($_.Exception.Message)"
+    }
+}
+
 $brief = Join-Path $Target "memory\project-brief.md"
 if (Test-Path -LiteralPath $brief) {
     $content = Get-Content -LiteralPath $brief -Encoding UTF8 -Raw

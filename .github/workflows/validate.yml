@@ -25,6 +25,7 @@ jobs:
             "marketplace.json",
             "plugins/ai-team-workflow/.codex-plugin/plugin.json",
             "plugins/ai-team-workflow/assets/project-template/config.json",
+            "plugins/ai-team-workflow/assets/project-template/VERSION.json",
             "plugins/ai-team-workflow/assets/project-template/commands.json",
             "plugins/ai-team-workflow/assets/project-template/state/tasks.json",
             "plugins/ai-team-workflow/assets/project-template/state/runs.json"
@@ -109,6 +110,10 @@ jobs:
             "scripts/Get-AiTeamIntake.ps1",
             "scripts/Test-AiTeamProject.ps1",
             "scripts/Test-AiTeamDiffBoundary.ps1",
+            "scripts/Test-AiTeamStateMachine.ps1",
+            "scripts/Get-AiTeamWorkflowMode.ps1",
+            "scripts/Measure-AiTeamContext.ps1",
+            "scripts/New-AiTeamReviewReport.ps1",
             "scripts/Update-AiTeamRun.ps1"
           )) {
             if (-not (Test-Path -LiteralPath (Join-Path $template $file))) {
@@ -139,8 +144,8 @@ jobs:
           $mixedIntake = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $mixedProject ".ai-team/scripts/Get-AiTeamIntake.ps1") -Json | ConvertFrom-Json
           if ($mixedIntake.project_type -ne "mixed_or_notes_directory") { throw "Expected mixed directory intake classification." }
 
-          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -AllowedFiles "docs/demo.md,docs/notes.md"
-          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -AllowedFiles "src/**"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-001 -Title "Demo Scope" -WorkMode Production -WorkflowMode auto -AllowedFiles "docs/demo.md,docs/notes.md"
+          powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamTask.ps1") -Id demo-002 -Title "Demo Build" -Dependencies "demo-001" -WorkflowMode auto -AllowedFiles "src/**"
           $boundaryProject = Join-Path $tmp "boundary-project"
           New-Item -ItemType Directory -Force -Path $boundaryProject | Out-Null
           Copy-Item -LiteralPath $template -Destination (Join-Path $boundaryProject ".ai-team") -Recurse
@@ -202,6 +207,13 @@ jobs:
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-001 -Role executor -Status passed -ChangedFiles "docs/demo.md" -Verification "build: passed"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Update-AiTeamRun.ps1") -TaskId demo-002 -Role reviewer -Status failed -ChangedFiles "src/app.ts" -Verification "test: failed" -BlockedReason "Missing test fixture"
           powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Sync-AiTeamState.ps1")
+          $budget = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Measure-AiTeamContext.ps1") -Json | ConvertFrom-Json
+          if (-not $budget.estimated_tokens) { throw "Context budget did not report estimated tokens." }
+          $reviewReport = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/New-AiTeamReviewReport.ps1") -TaskId demo-001 -OutFile auto -Json | ConvertFrom-Json
+          if ($reviewReport.recommended_decision -notin @("pass", "request_changes", "blocked")) { throw "Review report did not include a valid recommended decision." }
+          if (-not (Test-Path -LiteralPath (Join-Path $project ".ai-team/reports/demo-001-review.json"))) { throw "Review report was not persisted." }
+          $stateMachine = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Test-AiTeamStateMachine.ps1") -TaskId demo-001 -Json | ConvertFrom-Json
+          if ($stateMachine.status -notin @("passed", "warning")) { throw "Unexpected state machine status for demo-001." }
           $compactContext = powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $project ".ai-team/scripts/Get-AiTeamContext.ps1") -TaskId demo-001
           $compactText = $compactContext -join "`n"
           if ($compactText -notmatch "Recent Run Evidence") { throw "Compact context did not include run evidence heading." }
@@ -272,3 +284,8 @@ jobs:
           if (-not (Test-Path -LiteralPath (Join-Path $project ".ai-team/policies/command-policy.md"))) {
             throw "Workflow policy was not updated."
           }
+          $migrationReports = @(Get-ChildItem -LiteralPath (Join-Path $project ".ai-team/reports") -Filter "migration-*.json")
+          if ($migrationReports.Count -eq 0) { throw "Migration report was not written." }
+          $migration = Get-Content -LiteralPath $migrationReports[0].FullName -Raw -Encoding UTF8 | ConvertFrom-Json
+          if (-not $migration.latestTemplateVersion) { throw "Migration report did not include latest template version." }
+          if ($migration.healthCheck.status -ne "passed") { throw "Migration health check did not pass." }
