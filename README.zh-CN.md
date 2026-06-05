@@ -4,79 +4,68 @@
   <a href="./README.md">English</a> | <strong>简体中文</strong>
 </p>
 
-`ai-team-workflow` 是一个 Codex 优先的 AI 开发团队工作流插件。
+`ai-team-workflow` 是一个 AI 开发团队工作流插件。它提供一套共享的 `.ai-team` 工作流核心，并分别提供 Codex 和 Claude Code 的独立入口包。
 
-它提供一套可复用的全局标准，并在每个项目中创建项目级 `.ai-team` 文件，用于产品规划、项目接管、任务卡、代码地图、结构化任务状态、运行证据、命令风险检查、diff 边界检查、审核门禁，以及轻量级 GitHub PR/CI/安全检查。
+## 下载包
 
-## 它提供什么
+预构建 zip 包在 `dist/`：
 
-- 全局 Human Lead 画像。
-- 干净的项目级 `.ai-team` 模板。
-- Codex 自然语言路由。
-- Project Intake Gate：自动识别新项目、已有代码库、已有 AI Team 项目、混合/笔记目录或不清晰目录。
+- `ai-team-workflow-codex-v0.5.0.zip`：给 Codex 项目使用。
+- `ai-team-workflow-claude-v0.5.0.zip`：给 Claude Code 项目使用。
+
+两个包共享同一套 `.ai-team` 工作流核心，但平台入口文件彼此隔离，避免 Codex 和 Claude 的逻辑打架。
+
+## 核心能力
+
 - 任务卡、项目记忆、代码地图和结构化任务状态。
-- Workflow Modes：`light`、`standard`、`strict`、`parallel`，用于平衡稳定性、效率和 token 消耗。
-- 保守的 workflow mode 自动分类器，用于任务创建和健康检查。
-- Compact context：默认只加载紧凑上下文，需要时才升级到 standard/full。
-- 结构化 Review Report：汇总改动文件、边界检查、状态机检查、运行证据和建议结论。
-- 使用 `-OutFile auto` 时，Review Report 会保存到 `.ai-team/reports/`。
-- 状态机检查：约束 review/done 状态和 strict 任务证据。
+- Workflow Modes：`light`、`standard`、`strict`、`parallel`。
+- 自动 workflow mode 分类器。
+- Compact context 和 context budget 检查，减少 token 消耗。
+- Diff 边界检查、状态机检查、Review Report 和 run evidence。
 - 项目更新时记录模板版本和 migration report。
-- Context budget 检查：衡量 memory、任务卡、repo map、run evidence 的上下文成本。
-- Diff 边界检查：对比实际改动文件和任务卡允许修改范围。
-- 规模、质量、性能、安全、PR 和集成门禁。
-- Production Mode、命令安全、发布门禁和简洁运行证据。
-- 轻量 GitHub issue/PR 模板，不强制使用 GitHub Projects。
+- 质量、安全、性能、PR、发布和集成门禁。
 
-## 在另一台电脑安装
+## Codex 安装
 
-克隆这个仓库：
+下载并解压：
+
+```text
+dist/ai-team-workflow-codex-v0.5.0.zip
+```
+
+把内容放到 Codex 项目根目录，保留：
+
+- `.ai-team/`
+- `AGENTS.md`
+- `Initialize-AiTeamProject.ps1`
+- `Update-AiTeamProject.ps1`
+
+## Claude 安装
+
+下载并解压：
+
+```text
+dist/ai-team-workflow-claude-v0.5.0.zip
+```
+
+把内容放到 Claude Code 项目根目录，保留：
+
+- `.ai-team/`
+- `.claude/`
+- `CLAUDE.md`
+- `Initialize-AiTeamProject.ps1`
+- `Update-AiTeamProject.ps1`
+
+## 验证
+
+在项目根目录运行：
 
 ```powershell
-git clone https://github.com/Allen050121/ai-team-workflow-marketplace.git
-cd ai-team-workflow-marketplace
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamProject.ps1
 ```
 
-在 Codex 里添加这个 marketplace，指向仓库根目录或 `marketplace.json`：
-
-```text
-ai-team-workflow-marketplace/marketplace.json
-```
-
-安装插件后，同步全局模板：
+## 重新构建下载包
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\plugins\ai-team-workflow\scripts\Install-AiTeamWorkflow.ps1 -Force
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version 0.5.0 -Clean
 ```
-
-## 初始化一个项目
-
-在任意项目根目录运行：
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Initialize-AiTeamProject.ps1"
-```
-
-然后在 Codex 里自然表达需求：
-
-```text
-我想做一个产品：xxx。遇到关键产品或技术选择先问我。
-```
-
-## 日常使用
-
-在 Codex 里直接说：
-
-```text
-继续
-```
-
-```text
-审核刚才的任务
-```
-
-```text
-继续到部署前检查，但不要真正部署生产环境。
-```
-
-Codex 应该读取全局标准，检查当前项目的 `.ai-team`，应用 Project Intake Gate，并自动路由后续工作。小任务走 `light`，普通任务走 `standard`，生产/安全/数据/依赖/部署相关任务走 `strict`，只有边界清晰的独立任务才走 `parallel`。

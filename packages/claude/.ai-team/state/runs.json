@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "runs": [],
+  "updatedAt": null,
+  "notes": [
+    "This file is a compact execution ledger for task, review, and integration runs.",
+    "Store summaries and verification results only. Do not store full chat logs.",
+    "Use .ai-team/scripts/Update-AiTeamRun.ps1 to append run evidence."
+  ]
+}

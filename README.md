@@ -1,74 +1,71 @@
 # AI Team Workflow Marketplace
 
 <p align="center">
-  <strong>English</strong> · <a href="./README.zh-CN.md">简体中文</a>
+  <strong>English</strong> | <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
-`ai-team-workflow` is a Codex-first AI development team workflow plugin.
+`ai-team-workflow` is an AI development team workflow plugin with a shared `.ai-team` core and isolated Codex / Claude Code distribution packages.
 
-It provides a reusable global standard plus project-local `.ai-team` files for product planning, project intake, task cards, repo maps, structured task state, run evidence, command risk checks, diff boundary checks, review gates, and lightweight GitHub PR/CI/security checks.
+## Download Packages
 
-## What It Provides
+Prebuilt zip packages are in `dist/`:
 
-- Global Human Lead profile.
-- Clean project template for `.ai-team`.
-- Natural-language routing for Codex.
-- Project Intake Gate for new projects, existing codebases, AI Team projects, mixed directories, and unclear directories.
+- `ai-team-workflow-codex-v0.5.0.zip` for Codex projects.
+- `ai-team-workflow-claude-v0.5.0.zip` for Claude Code projects.
+
+Both packages share the same `.ai-team` workflow core, but keep platform-specific entry files isolated so Codex and Claude instructions do not conflict.
+
+## Core Capabilities
+
 - Task cards, project memory, repo map, and structured task state.
-- Diff boundary checks that compare actual changed files against task card boundaries.
-- Scale, quality, performance, security, PR, and integration gates.
-- Production mode, command safety, release gates, and compact run evidence.
-- Lightweight GitHub issue/PR templates without forcing GitHub Projects.
+- Workflow modes: `light`, `standard`, `strict`, and `parallel`.
+- Automatic workflow mode classification.
+- Compact context and context budget checks to reduce token waste.
+- Diff boundary checks, state machine checks, review reports, and run evidence.
+- Template version tracking and migration reports during project updates.
+- Quality, security, performance, PR, release, and integration gates.
 
-## Install On Another Computer
+## Codex Install
 
-Clone this repository:
+Download and extract:
+
+```text
+dist/ai-team-workflow-codex-v0.5.0.zip
+```
+
+Place the contents in a Codex project root. Keep:
+
+- `.ai-team/`
+- `AGENTS.md`
+- `Initialize-AiTeamProject.ps1`
+- `Update-AiTeamProject.ps1`
+
+## Claude Install
+
+Download and extract:
+
+```text
+dist/ai-team-workflow-claude-v0.5.0.zip
+```
+
+Place the contents in a Claude Code project root. Keep:
+
+- `.ai-team/`
+- `.claude/`
+- `CLAUDE.md`
+- `Initialize-AiTeamProject.ps1`
+- `Update-AiTeamProject.ps1`
+
+## Validate
+
+From the project root:
 
 ```powershell
-git clone https://github.com/Allen050121/ai-team-workflow-marketplace.git
-cd ai-team-workflow-marketplace
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeamProject.ps1
 ```
 
-Add this marketplace in Codex using the repository root or marketplace file:
-
-```text
-ai-team-workflow-marketplace/marketplace.json
-```
-
-After installing the plugin, sync the global template:
+## Rebuild Packages
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\plugins\ai-team-workflow\scripts\Install-AiTeamWorkflow.ps1 -Force
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version 0.5.0 -Clean
 ```
-
-## Initialize A Project
-
-From any project directory:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.codex\ai-team\Initialize-AiTeamProject.ps1"
-```
-
-Then use Codex naturally:
-
-```text
-I want to build a product: xxx. Ask me before key product or technical choices.
-```
-
-## Daily Use
-
-In Codex, use natural language:
-
-```text
-Continue
-```
-
-```text
-Review the last task
-```
-
-```text
-Continue to pre-deployment checks, but do not deploy to production yet.
-```
-
-Codex should read the global standard, inspect the project `.ai-team`, apply the Project Intake Gate, and route the work automatically.
