@@ -35,12 +35,26 @@ This avoids the common failure mode of many AI windows: each window has partial 
 ## Daily Workflow
 
 1. Tell Codex the real product or feature request in natural language.
-2. Codex routes the request through `AGENTS.md`, then uses Dispatcher to split the fewest useful tasks.
-3. Executor works from one task card, one branch or worktree, and only the relevant project context.
-4. Executor records compact evidence in `.ai-team/state/runs.json`.
-5. Reviewer checks diff, verification, command policy, and task evidence before passing work.
-6. Integration Gate merges in dependency order and uses Release Gate for deployment or publishing.
-7. Memory Curator records only durable pitfalls and reusable patterns.
+2. Codex routes the request through `AGENTS.md`, then uses Dispatcher to create the fewest useful layered task cards.
+3. New products start with product decision and design cards before implementation cards.
+4. Executor works from one task card, one branch or worktree, and only the relevant project context.
+5. Executor records compact evidence in `.ai-team/state/runs.json`.
+6. Reviewer checks diff, verification, command policy, and task evidence before passing work.
+7. Integration Gate merges in dependency order and uses Release Gate for deployment or publishing.
+8. Memory Curator records only durable pitfalls and reusable patterns.
+
+## Layered Task Cards
+
+Each task card has `task_type` and `delivery_stage` fields so the agent knows what kind of work is allowed:
+
+- `product_decision`: audience, pain, MVP scope, product surface, scale, cost, and approvals.
+- `design`: frontend screens, components, states, and user interactions.
+- `implementation`: code changes that follow confirmed product and design decisions.
+- `verification`: review, testing, security, performance, and release readiness.
+- `deployment`: infrastructure, capacity, monitoring, rollback, and release actions.
+- `maintenance`: cleanup, migration, documentation, and follow-up improvements.
+
+For user-facing products, implementation should not start until the relevant product decision and frontend design cards are complete or explicitly waived.
 
 ## Minimal Commands
 
@@ -118,6 +132,12 @@ Measure context budget before loading large memory or run evidence:
 powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Measure-AiTeamContext.ps1
 ```
 
+Create a benchmark report for stability, rework, and context/token comparison:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/New-AiTeamBenchmark.ps1 -Id todo-mvp -ProjectName "Todo MVP"
+```
+
 ## Non-Negotiable Rules
 
 - Small low-risk changes may use `light` workflow mode. Normal product work uses `standard`. Auth, data, payments, dependencies, deployment, security, or production-facing work uses `strict`.
@@ -138,6 +158,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Measure-AiT
 
 - `.ai-team/memory/`: durable project context, pitfalls, and reusable patterns.
 - `.ai-team/tasks/`: task cards and task state.
+- `.ai-team/metrics/`: benchmark reports and context/token comparison records.
 - `.ai-team/prompts/`: role prompts for Dispatcher, Executor, Reviewer, and Memory Curator.
 - `.ai-team/checklists/`: plan, review, security, release, and integration gates.
 - `.ai-team/policies/command-policy.md`: safe, approval-required, and forbidden command classes.
@@ -146,6 +167,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Measure-AiT
 - `.ai-team/scripts/New-AiTeamReviewReport.ps1`: structured review report with boundary, state, evidence, and recommended decision.
 - `.ai-team/scripts/Test-AiTeamStateMachine.ps1`: task state and evidence consistency checks.
 - `.ai-team/scripts/Measure-AiTeamContext.ps1`: context size and token budget estimate for memory, tasks, repo-map, and runs.
+- `.ai-team/scripts/New-AiTeamBenchmark.ps1`: creates a benchmark report to compare baseline AI coding against AI Team Workflow.
 - `.ai-team/scripts/Test-AiTeamCommand.ps1`: lightweight command risk classifier.
 - `.ai-team/scripts/`: small PowerShell helpers for repeatable operations.
 - `.ai-team/hooks/`: reusable hook entrypoints and examples for agent tools.

@@ -84,6 +84,7 @@ $templateManaged = @(
     "checklists",
     "github",
     "hooks",
+    "metrics\BENCHMARK_TEMPLATE.md",
     "policies",
     "prompts",
     "scripts",
@@ -135,6 +136,13 @@ else {
 if (-not (Test-Path -LiteralPath (Join-Path $Target "state\tasks.json"))) {
     Copy-TemplateItem "state\tasks.json"
 }
+
+if (-not (Test-Path -LiteralPath (Join-Path $Target "metrics\benchmarks.json"))) {
+    Copy-TemplateItem "metrics\benchmarks.json"
+}
+else {
+    $preservedItems.Add("metrics\benchmarks.json") | Out-Null
+}
 else {
     $preservedItems.Add("state\tasks.json") | Out-Null
 }
@@ -146,7 +154,7 @@ else {
     $preservedItems.Add("memory\production-mode.md") | Out-Null
 }
 
-foreach ($item in @("memory", "tasks/*.md", "state", "index", "commands.json")) {
+foreach ($item in @("memory", "tasks/*.md", "state", "index", "commands.json", "metrics/*.md")) {
     $preservedItems.Add($item) | Out-Null
 }
 
@@ -186,5 +194,5 @@ Write-Host "Migration report: $migrationReportPath"
 if ($health.ran) {
     Write-Host "Health check: $($health.status)"
 }
-Write-Host "Protected project-local directories: memory, tasks/*.md, state, index, commands.json."
+Write-Host "Protected project-local directories: memory, tasks/*.md, state, index, commands.json, metrics reports."
 Write-Host "Run .ai-team/scripts/Sync-AiTeamState.ps1 after reviewing task cards."

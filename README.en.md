@@ -43,11 +43,13 @@ Parallel mode is still available, but only when task boundaries are very clear a
 ## Core Capabilities
 
 - Task cards, project memory, repo map, and structured task state.
+- Layered task cards for product decisions, design, implementation, verification, deployment, and maintenance.
 - Single-agent product delivery by default, with parallel mode only when justified.
 - Product discovery, product surface, frontend design, API mapping, and deployment capacity gates.
 - Workflow modes: `light`, `standard`, `strict`, and `parallel`.
 - Automatic workflow mode classification.
 - Compact context and context budget checks to reduce token waste.
+- Benchmark templates for recording rework, turns, verification, and context/token budgets on real projects.
 - Diff boundary checks, state machine checks, review reports, and run evidence.
 - Template version tracking and migration reports during project updates.
 - Quality, security, performance, PR, release, and integration gates.

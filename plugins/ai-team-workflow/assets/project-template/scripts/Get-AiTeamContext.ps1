@@ -202,6 +202,8 @@ function Show-TaskStateSummary {
     }
 
     Write-Host ("- {0} [{1}] {2}" -f $task.task_id, $task.status, $task.title)
+    if ($task.task_type) { Write-Host ("  task_type: {0}" -f $task.task_type) }
+    if ($task.delivery_stage) { Write-Host ("  delivery_stage: {0}" -f $task.delivery_stage) }
     if ($task.work_mode) { Write-Host ("  work_mode: {0}" -f $task.work_mode) }
     if ($task.workflow_mode) { Write-Host ("  workflow_mode: {0}" -f $task.workflow_mode) }
     if ($task.mode) { Write-Host ("  mode: {0}" -f $task.mode) }

@@ -7,6 +7,12 @@ param(
 
     [string]$Owner = "dispatcher",
 
+    [ValidateSet("product_decision", "design", "implementation", "verification", "deployment", "maintenance")]
+    [string]$TaskType = "implementation",
+
+    [ValidateSet("discovery", "surface", "stack", "architecture", "frontend", "api_mapping", "build", "review", "release")]
+    [string]$DeliveryStage = "build",
+
     [ValidateSet("planned", "in_progress", "review", "blocked", "done")]
     [string]$Status = "planned",
 
@@ -77,6 +83,8 @@ $content = $content.Replace("{{TITLE}}", $Title)
 $content = $content.Replace("{{TASK_ID}}", $Id)
 $content = $content.Replace("{{STATUS}}", $Status)
 $content = $content.Replace("{{OWNER}}", $Owner)
+$content = $content.Replace("{{TASK_TYPE}}", $TaskType)
+$content = $content.Replace("{{DELIVERY_STAGE}}", $DeliveryStage)
 $content = $content.Replace("{{MODE}}", $Mode)
 $content = $content.Replace("{{WORK_MODE}}", $WorkMode)
 $content = $content.Replace("{{WORKFLOW_MODE}}", $WorkflowMode)

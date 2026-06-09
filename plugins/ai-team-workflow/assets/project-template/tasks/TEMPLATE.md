@@ -3,6 +3,8 @@ title: "{{TITLE}}"
 task_id: "{{TASK_ID}}"
 status: "{{STATUS}}"
 owner: "{{OWNER}}"
+task_type: "{{TASK_TYPE}}"
+delivery_stage: "{{DELIVERY_STAGE}}"
 mode: "{{MODE}}"
 work_mode: "{{WORK_MODE}}"
 workflow_mode: "{{WORKFLOW_MODE}}"
@@ -26,6 +28,8 @@ tags:
 
 - Task ID: `{{TASK_ID}}`
 - Owner: `{{OWNER}}`
+- Task Type: `{{TASK_TYPE}}`
+- Delivery Stage: `{{DELIVERY_STAGE}}`
 - Status: `{{STATUS}}`
 - Mode: `{{MODE}}`
 - Work Mode: `{{WORK_MODE}}`
@@ -43,6 +47,16 @@ tags:
 ## Goal
 
 Describe the user-visible result this task must deliver.
+
+## Task Layer
+
+Choose one task type and one delivery stage before execution starts.
+
+- Task Type: `product_decision | design | implementation | verification | deployment | maintenance`
+- Delivery Stage: `discovery | surface | stack | architecture | frontend | api_mapping | build | review | release`
+- This card is allowed to produce:
+- This card must not skip:
+- Next expected card:
 
 ## Product Decisions
 

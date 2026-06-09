@@ -163,6 +163,9 @@ if ($stateTasks.Count -gt 0) {
     Write-Host "Tasks:"
     foreach ($task in $stateTasks) {
         Write-Host ("- {0} [{1}] {2}" -f $task.task_id, $task.status, $task.title)
+        if ($task.task_type -or $task.delivery_stage) {
+            Write-Host ("  Layer: type={0}; stage={1}" -f $task.task_type, $task.delivery_stage)
+        }
         if ($task.work_mode) { Write-Host ("  Work mode: {0}" -f $task.work_mode) }
         if ($task.workflow_mode) { Write-Host ("  Workflow mode: {0}" -f $task.workflow_mode) }
         if ($task.business) { Write-Host ("  Business: {0}" -f $task.business) }
