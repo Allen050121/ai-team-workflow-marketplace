@@ -136,15 +136,15 @@ else {
 if (-not (Test-Path -LiteralPath (Join-Path $Target "state\tasks.json"))) {
     Copy-TemplateItem "state\tasks.json"
 }
+else {
+    $preservedItems.Add("state\tasks.json") | Out-Null
+}
 
 if (-not (Test-Path -LiteralPath (Join-Path $Target "metrics\benchmarks.json"))) {
     Copy-TemplateItem "metrics\benchmarks.json"
 }
 else {
     $preservedItems.Add("metrics\benchmarks.json") | Out-Null
-}
-else {
-    $preservedItems.Add("state\tasks.json") | Out-Null
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $Target "memory\production-mode.md"))) {
