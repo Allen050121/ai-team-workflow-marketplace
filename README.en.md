@@ -1,4 +1,4 @@
-# AI Team Workflow Marketplace
+﻿# AI Team Workflow Marketplace
 
 <p align="center">
   <a href="./README.md">简体中文</a> | <strong>English</strong>
@@ -78,8 +78,8 @@ Review the current task card.
 
 Download the latest zip packages from GitHub Releases:
 
-- [Download for Codex](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.0/ai-team-workflow-codex-v0.5.0.zip)
-- [Download for Claude Code](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.0/ai-team-workflow-claude-v0.5.0.zip)
+- [Download for Codex](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.1/ai-team-workflow-codex-v0.5.1.zip)
+- [Download for Claude Code](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.1/ai-team-workflow-claude-v0.5.1.zip)
 
 Both packages share the same `.ai-team` workflow core, but keep platform-specific entry files isolated so Codex and Claude instructions do not conflict.
 
@@ -88,7 +88,7 @@ Both packages share the same `.ai-team` workflow core, but keep platform-specifi
 Download and extract:
 
 ```text
-ai-team-workflow-codex-v0.5.0.zip
+ai-team-workflow-codex-v0.5.1.zip
 ```
 
 Place the contents in a Codex project root. Keep:
@@ -103,7 +103,7 @@ Place the contents in a Codex project root. Keep:
 Download and extract:
 
 ```text
-ai-team-workflow-claude-v0.5.0.zip
+ai-team-workflow-claude-v0.5.1.zip
 ```
 
 Place the contents in a Claude Code project root. Keep:
@@ -125,7 +125,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 ## Rebuild Packages
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version 0.5.0 -Clean
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version 0.5.1 -Clean
 ```
 
 Pushing a version tag creates a GitHub Release and uploads the zip packages automatically. Bump the template and plugin versions first, then push the matching tag:

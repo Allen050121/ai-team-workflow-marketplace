@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "templateVersion": "0.5.0",
+  "templateVersion": "0.5.1",
   "branchPrefix": "codex/",
   "defaultMaxParallelAgents": 1,
   "absoluteMaxParallelAgents": 4,

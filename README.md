@@ -1,4 +1,4 @@
-# AI Team Workflow Marketplace
+﻿# AI Team Workflow Marketplace
 
 <p align="center">
   <strong>简体中文</strong> | <a href="./README.en.md">English</a>
@@ -78,8 +78,8 @@ AI Team Workflow 把这些高风险决策前置成任务卡和门禁，让 Agent
 
 请从 GitHub Release 下载最新 zip 包：
 
-- [下载 Codex 版本](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.0/ai-team-workflow-codex-v0.5.0.zip)
-- [下载 Claude Code 版本](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.0/ai-team-workflow-claude-v0.5.0.zip)
+- [下载 Codex 版本](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.1/ai-team-workflow-codex-v0.5.1.zip)
+- [下载 Claude Code 版本](https://github.com/Allen050121/ai-team-workflow-marketplace/releases/download/v0.5.1/ai-team-workflow-claude-v0.5.1.zip)
 
 两个包共享同一套 `.ai-team` 工作流核心，但平台入口文件彼此隔离，避免 Codex 和 Claude Code 的项目指令互相冲突。
 
@@ -88,7 +88,7 @@ AI Team Workflow 把这些高风险决策前置成任务卡和门禁，让 Agent
 下载并解压：
 
 ```text
-ai-team-workflow-codex-v0.5.0.zip
+ai-team-workflow-codex-v0.5.1.zip
 ```
 
 把内容放到 Codex 项目根目录，保留：
@@ -103,7 +103,7 @@ ai-team-workflow-codex-v0.5.0.zip
 下载并解压：
 
 ```text
-ai-team-workflow-claude-v0.5.0.zip
+ai-team-workflow-claude-v0.5.1.zip
 ```
 
 把内容放到 Claude Code 项目根目录，保留：
@@ -125,7 +125,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .ai-team/scripts/Test-AiTeam
 ## 重新构建下载包
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version 0.5.0 -Clean
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version 0.5.1 -Clean
 ```
 
 打 tag 后会自动创建 Release 并上传 zip 包。先把模板版本和插件版本更新到目标版本，再打同名 tag：

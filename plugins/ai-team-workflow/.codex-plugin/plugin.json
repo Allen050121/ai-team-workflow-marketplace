@@ -1,8 +1,8 @@
 {
-  "version": "0.5.0+codex.20260609014238",
+  "version": "0.5.1+codex.20260609014238",
   "name": "ai-team-workflow",
   "skills": "./skills/",
-  "description": "Codex-first AI Team workflow with project intake, global templates, Human Lead profile, workflow modes, automatic mode classification, compact context budgets, migration reports, persisted review reports, state machine checks, production mode, task state, run evidence, repo map, command safety, release gates, and lightweight GitHub gates.",
+  "description": "Codex-first AI Team workflow with layered task cards, benchmark metrics, project intake, global templates, Human Lead profile, workflow modes, automatic mode classification, compact context budgets, migration reports, persisted review reports, state machine checks, production mode, task state, run evidence, repo map, command safety, release gates, and lightweight GitHub gates.",
   "author": {
     "name": "Local developer"
   },
@@ -16,6 +16,8 @@
       "GitHub gates",
       "Repo map",
       "Task state",
+      "Layered task cards",
+      "Benchmark metrics",
       "Run evidence",
       "Workflow modes",
       "Workflow mode classifier",
@@ -31,7 +33,7 @@
       "Diff boundary checker",
       "Release gate"
     ],
-    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, project intake classification, workflow modes for light/standard/strict/parallel execution, automatic workflow mode classification, compact context budget measurement for lower token waste, template version migration reports, persisted review reports, state machine evidence checks, production mode routing, task cards, diff boundary checks, structured task state, compact run evidence, repo maps, natural-language routing, scale-aware quality gates, command safety policy, command risk classification, release gates, and lightweight GitHub PR/CI/security gates.",
+    "longDescription": "AI Team Workflow installs a global Codex standard and clean project template for Human Lead driven product development, layered product/design/implementation/verification/deployment task cards, benchmark metrics for stability and context budget tracking, project intake classification, workflow modes for light/standard/strict/parallel execution, automatic workflow mode classification, compact context budget measurement for lower token waste, template version migration reports, persisted review reports, state machine evidence checks, production mode routing, task cards, diff boundary checks, structured task state, compact run evidence, repo maps, natural-language routing, scale-aware quality gates, command safety policy, command risk classification, release gates, and lightweight GitHub PR/CI/security gates.",
     "shortDescription": "Codex-first AI team workflow and project template.",
     "defaultPrompt": "Set up or use the AI Team Workflow for this project.",
     "category": "Productivity"

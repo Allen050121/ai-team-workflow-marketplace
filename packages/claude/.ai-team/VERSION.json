@@ -1,8 +1,8 @@
 {
-  "templateVersion": "0.5.0",
+  "templateVersion": "0.5.1",
   "schemaVersion": 1,
   "updatedAt": "2026-06-05",
   "notes": [
-    "Adds template version tracking, migration reports, context budget checks, and persisted review reports."
+    "Adds layered task cards and benchmark metrics for stability, rework, and context budget tracking."
   ]
 }
