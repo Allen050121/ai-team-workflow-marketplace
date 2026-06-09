@@ -26,6 +26,28 @@ jobs:
           $version = $tag.TrimStart("v")
           "version=$version" >> $env:GITHUB_OUTPUT
 
+      - name: Validate release version
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "${{ steps.version.outputs.version }}"
+
+          $plugin = Get-Content -Raw -LiteralPath "plugins/ai-team-workflow/.codex-plugin/plugin.json" | ConvertFrom-Json
+          $pluginBaseVersion = ($plugin.version -split "\+")[0]
+          if ($pluginBaseVersion -ne $version) {
+            throw "Tag version $version does not match plugin base version $pluginBaseVersion"
+          }
+
+          $templateVersion = (Get-Content -Raw -LiteralPath "plugins/ai-team-workflow/assets/project-template/VERSION.json" | ConvertFrom-Json).templateVersion
+          if ($templateVersion -ne $version) {
+            throw "Tag version $version does not match VERSION.json templateVersion $templateVersion"
+          }
+
+          $configTemplateVersion = (Get-Content -Raw -LiteralPath "plugins/ai-team-workflow/assets/project-template/config.json" | ConvertFrom-Json).templateVersion
+          if ($configTemplateVersion -ne $version) {
+            throw "Tag version $version does not match config.json templateVersion $configTemplateVersion"
+          }
+
       - name: Build packages
         shell: pwsh
         run: |
