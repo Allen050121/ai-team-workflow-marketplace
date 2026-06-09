@@ -1,0 +1,77 @@
+name: Release AI Team Workflow
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag.TrimStart("v")
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Build packages
+        shell: pwsh
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-AiTeamPackages.ps1 -Version "${{ steps.version.outputs.version }}" -Clean
+
+      - name: Validate package contents
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "${{ steps.version.outputs.version }}"
+          $checks = @(
+            @{
+              Zip = "dist/ai-team-workflow-codex-v$version.zip"
+              Required = @(".ai-team/", "AGENTS.md", "Initialize-AiTeamProject.ps1", "Update-AiTeamProject.ps1")
+            },
+            @{
+              Zip = "dist/ai-team-workflow-claude-v$version.zip"
+              Required = @(".ai-team/", ".claude/", "CLAUDE.md", "Initialize-AiTeamProject.ps1", "Update-AiTeamProject.ps1")
+            }
+          )
+
+          foreach ($check in $checks) {
+            if (-not (Test-Path -LiteralPath $check.Zip)) {
+              throw "Missing package: $($check.Zip)"
+            }
+            $entries = @(tar -tf $check.Zip)
+            foreach ($required in $check.Required) {
+              if (-not ($entries | Where-Object { $_ -eq $required -or $_ -like "$required*" })) {
+                throw "Package $($check.Zip) is missing $required"
+              }
+            }
+          }
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "AI Team Workflow ${{ github.ref_name }}"
+          files: |
+            dist/ai-team-workflow-codex-v${{ steps.version.outputs.version }}.zip
+            dist/ai-team-workflow-claude-v${{ steps.version.outputs.version }}.zip
+          body: |
+            ## Downloads
+
+            - `ai-team-workflow-codex-v${{ steps.version.outputs.version }}.zip` for Codex projects.
+            - `ai-team-workflow-claude-v${{ steps.version.outputs.version }}.zip` for Claude Code projects.
+
+            ## Notes
+
+            This release is built automatically from `${{ github.ref_name }}`.
