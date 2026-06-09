@@ -287,12 +287,15 @@ $requiredPaths = @(
     "scripts\Get-AiTeamIntake.ps1",
     "scripts\Get-AiTeamStatus.ps1",
     "scripts\Measure-AiTeamContext.ps1",
+    "scripts\New-AiTeamBenchmark.ps1",
     "scripts\New-AiTeamReviewReport.ps1",
     "scripts\Sync-AiTeamState.ps1",
     "scripts\Test-AiTeamCommand.ps1",
     "scripts\Test-AiTeamDiffBoundary.ps1",
     "scripts\Test-AiTeamStateMachine.ps1",
     "scripts\Update-AiTeamRun.ps1",
+    "metrics\BENCHMARK_TEMPLATE.md",
+    "metrics\benchmarks.json",
     "tasks\TEMPLATE.md",
     "state\runs.json"
 )
@@ -301,7 +304,7 @@ foreach ($relativePath in $requiredPaths) {
     Test-PathRequired $relativePath
 }
 
-foreach ($jsonPath in @("config.json", "commands.json", "state\tasks.json", "state\runs.json")) {
+foreach ($jsonPath in @("config.json", "commands.json", "state\tasks.json", "state\runs.json", "metrics\benchmarks.json")) {
     Test-JsonFile $jsonPath
 }
 
@@ -315,6 +318,12 @@ if (Test-Path -LiteralPath $taskTemplatePath) {
     }
     if ($taskTemplate -notmatch "(?m)^workflow_mode:") {
         Add-CheckError "Task template is missing workflow_mode."
+    }
+    if ($taskTemplate -notmatch "(?m)^task_type:") {
+        Add-CheckError "Task template is missing task_type."
+    }
+    if ($taskTemplate -notmatch "(?m)^delivery_stage:") {
+        Add-CheckError "Task template is missing delivery_stage."
     }
 }
 
@@ -377,6 +386,30 @@ if (Test-Path -LiteralPath $budgetScript) {
     }
     catch {
         Add-CheckError "Context budget check failed: $($_.Exception.Message)"
+    }
+}
+
+$benchmarkScript = Join-Path $aiTeamRoot "scripts\New-AiTeamBenchmark.ps1"
+if (Test-Path -LiteralPath $benchmarkScript) {
+    try {
+        $tempId = "health-check-benchmark"
+        $metricsDir = Join-Path $aiTeamRoot "metrics"
+        $tempPath = Join-Path $metricsDir "$tempId.md"
+        $benchmarkStatePath = Join-Path $metricsDir "benchmarks.json"
+        $originalBenchmarkState = $null
+        if (Test-Path -LiteralPath $benchmarkStatePath) {
+            $originalBenchmarkState = Get-Content -LiteralPath $benchmarkStatePath -Encoding UTF8 -Raw
+        }
+        powershell -NoProfile -ExecutionPolicy Bypass -File $benchmarkScript -Id $tempId -ProjectName "Health Check Benchmark" -Force | Out-Null
+        if (Test-Path -LiteralPath $tempPath) {
+            Remove-Item -LiteralPath $tempPath -Force
+        }
+        if ($null -ne $originalBenchmarkState) {
+            Set-Content -LiteralPath $benchmarkStatePath -Encoding UTF8 -Value $originalBenchmarkState
+        }
+    }
+    catch {
+        Add-CheckError "Benchmark report creation failed: $($_.Exception.Message)"
     }
 }
 

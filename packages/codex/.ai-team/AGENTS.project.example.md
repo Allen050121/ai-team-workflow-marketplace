@@ -82,6 +82,7 @@ Follow the Human Lead preference: ask only decision-changing questions, provide 
 ## Operating Rules
 
 - Work from a task card with explicit goal, boundaries, files, and acceptance criteria.
+- Respect `task_type` and `delivery_stage`; do not turn product decision or design cards into implementation work.
 - Use a separate Git worktree or branch for parallel execution tasks.
 - Do not modify files outside the task boundary without updating the task card first.
 - Do not skip review, tests, build, or lint just because the change looks small.

@@ -43,11 +43,13 @@ AI Team Workflow 把这些高风险决策前置成任务卡和门禁，让 Agent
 ## 核心能力
 
 - 任务卡、项目记忆、仓库地图和结构化任务状态。
+- 分层任务卡：产品决策、设计、实现、验证、部署和维护。
 - 默认单 Agent 产品交付流，必要时才使用并行模式。
 - 产品发现、产品形态、前端设计、API 映射和部署容量门禁。
 - Workflow Modes：`light`、`standard`、`strict`、`parallel`。
 - 自动 workflow mode 分类。
 - Compact context 和 context budget 检查，减少 token 消耗。
+- Benchmark 模板，用真实项目记录返工、轮次、验证和上下文/token 预算。
 - Diff 边界检查、状态机检查、Review Report 和 run evidence。
 - 项目更新时记录模板版本和 migration report。
 - 质量、安全、性能、PR、发布和集成门禁。
