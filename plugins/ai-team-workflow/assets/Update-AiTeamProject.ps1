@@ -155,7 +155,7 @@ if (-not $SkipHealthCheck) {
     if (Test-Path -LiteralPath $healthScript) {
         $health.ran = $true
         try {
-            $healthOutput = powershell -NoProfile -ExecutionPolicy Bypass -File $healthScript 2>&1
+            $healthOutput = powershell -NoProfile -ExecutionPolicy Bypass -File $healthScript -SkipSync 2>&1
             $health.output = @($healthOutput | ForEach-Object { "$_" })
             $health.status = if ($LASTEXITCODE -eq 0) { "passed" } else { "failed" }
         }

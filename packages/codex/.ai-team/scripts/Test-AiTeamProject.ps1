@@ -83,6 +83,13 @@ function Test-TaskFileBoundaries {
         if ($taskFile.Name -eq "TEMPLATE.md") { continue }
 
         $content = Get-Content -LiteralPath $taskFile.FullName -Raw -Encoding UTF8
+        $looksLikeAiTeamTask = (
+            $content -match '(?m)^task_id:' -or
+            $content -match '(?m)^title:' -or
+            $content -match '(?m)^### Allowed To Modify'
+        )
+        if (-not $looksLikeAiTeamTask) { continue }
+
         if ($content -match '(?m)^\s*-\s+`?\$_`?\s*$') {
             Add-CheckError ("Task boundary in .ai-team/tasks/{0} contains literal '- `$_'. Regenerate or fix Allowed To Modify." -f $taskFile.Name)
         }
@@ -183,6 +190,9 @@ function Test-WorkflowModeClassification {
 
         $title = Get-TaskField $content "title"
         $goal = Get-MarkdownSection $content "Goal"
+        if (-not $title -and -not $goal) {
+            continue
+        }
         $mode = Get-TaskField $content "mode"
         if (-not $mode) { $mode = "serial" }
         $workMode = Get-TaskField $content "work_mode"
@@ -212,7 +222,11 @@ function Test-CompactContext {
     if (-not (Test-Path -LiteralPath $contextScript) -or -not (Test-Path -LiteralPath $tasksDir)) { return }
 
     $taskFile = Get-ChildItem -LiteralPath $tasksDir -Filter "*.md" |
-        Where-Object { $_.Name -ne "TEMPLATE.md" } |
+        Where-Object {
+            if ($_.Name -eq "TEMPLATE.md") { return $false }
+            $content = Get-Content -LiteralPath $_.FullName -Raw -Encoding UTF8
+            return ($content -match '(?m)^task_id:')
+        } |
         Sort-Object Name |
         Select-Object -First 1
 

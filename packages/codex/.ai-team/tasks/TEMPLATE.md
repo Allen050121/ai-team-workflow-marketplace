@@ -44,9 +44,41 @@ tags:
 
 Describe the user-visible result this task must deliver.
 
+## Product Decisions
+
+- Audience:
+- Primary pain:
+- MVP use case:
+- Product surface:
+- Confirmed stack choices:
+- Scale/capacity assumption:
+- Human Lead approvals needed:
+
+## Questions For Human Lead
+
+Ask only decision-changing questions. Prefer 1 to 3 questions with a recommended default.
+
+- 
+
 ## Non-Goals
 
 List what this task must not change.
+
+## Product Surface And UX Source
+
+- Source screens/pages:
+- User actions:
+- Components involved:
+- Loading/empty/error states:
+- Frontend approval status:
+
+## API And Business Mapping
+
+Map backend work to frontend interactions or system triggers.
+
+| Endpoint/Action | Source UI or Trigger | Business Rule | Auth/Permission | Error States |
+|---|---|---|---|---|
+| TODO | TODO | TODO | TODO | TODO |
 
 ## File Boundaries
 
@@ -75,6 +107,8 @@ List what this task must not change.
 
 - Keep the change small enough for one reviewer to inspect quickly.
 - Match process weight to Workflow Mode: light, standard, strict, or parallel.
+- For product work, complete product discovery, product surface, stack, frontend design, and API mapping gates before implementation.
+- Backend APIs should trace to a frontend interaction, integration, scheduled job, or operational need.
 - Prefer existing project patterns over new abstractions.
 - If boundaries are wrong, stop and update this card before editing.
 - Create or use a task branch when code changes are required.
@@ -84,6 +118,9 @@ List what this task must not change.
 ## Acceptance Criteria
 
 - [ ] Goal is implemented.
+- [ ] Product decisions and required approvals are recorded.
+- [ ] Frontend UX source is clear for user-facing work.
+- [ ] Backend/API work maps to a UI interaction or justified system trigger.
 - [ ] File boundary was respected or this card was updated.
 - [ ] Diff has no unrelated edits.
 - [ ] Pitfalls were checked.
