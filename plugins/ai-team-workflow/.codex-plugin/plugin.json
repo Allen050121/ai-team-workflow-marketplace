@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0+codex.20260605000000",
+  "version": "0.5.0+codex.20260609014238",
   "name": "ai-team-workflow",
   "skills": "./skills/",
   "description": "Codex-first AI Team workflow with project intake, global templates, Human Lead profile, workflow modes, automatic mode classification, compact context budgets, migration reports, persisted review reports, state machine checks, production mode, task state, run evidence, repo map, command safety, release gates, and lightweight GitHub gates.",

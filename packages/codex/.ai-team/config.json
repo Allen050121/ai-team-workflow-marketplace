@@ -2,7 +2,7 @@
   "version": 1,
   "templateVersion": "0.5.0",
   "branchPrefix": "codex/",
-  "defaultMaxParallelAgents": 3,
+  "defaultMaxParallelAgents": 1,
   "absoluteMaxParallelAgents": 4,
   "memoryFiles": [
     ".ai-team/memory/human-lead.md",
@@ -15,12 +15,17 @@
   "requiredGates": [
     ".ai-team/checklists/plan-gate.md",
     ".ai-team/checklists/project-intake-gate.md",
+    ".ai-team/checklists/product-discovery-gate.md",
+    ".ai-team/checklists/product-surface-gate.md",
     ".ai-team/checklists/scale-gate.md",
+    ".ai-team/checklists/frontend-design-gate.md",
+    ".ai-team/checklists/api-mapping-gate.md",
     ".ai-team/checklists/review-gate.md",
     ".ai-team/checklists/quality-gate.md",
     ".ai-team/checklists/security-gate.md",
     ".ai-team/checklists/performance-gate.md",
     ".ai-team/checklists/pr-gate.md",
+    ".ai-team/checklists/deployment-capacity-gate.md",
     ".ai-team/checklists/release-gate.md",
     ".ai-team/checklists/integration-gate.md"
   ],
@@ -52,6 +57,11 @@
       ".ai-team/prompts/dispatcher.md",
       ".ai-team/policies/workflow-modes.md",
       ".ai-team/checklists/project-intake-gate.md",
+      ".ai-team/checklists/product-discovery-gate.md",
+      ".ai-team/checklists/product-surface-gate.md",
+      ".ai-team/checklists/frontend-design-gate.md",
+      ".ai-team/checklists/api-mapping-gate.md",
+      ".ai-team/checklists/deployment-capacity-gate.md",
       ".ai-team/checklists/plan-gate.md"
     ],
     "executor": [

@@ -1,6 +1,6 @@
-﻿---
+---
 name: ai-team-workflow
-description: Use when setting up or operating a Codex-first AI Team workflow: global Human Lead profile, project-local .ai-team task system, natural language routing, scale/quality/performance gates, and project initialization from the global template.
+description: "Use when setting up or operating a Codex-first AI Team workflow: global Human Lead profile, project-local .ai-team task system, natural language routing, scale/quality/performance gates, and project initialization from the global template."
 ---
 
 # AI Team Workflow
